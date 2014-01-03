@@ -1,0 +1,46 @@
+{% extends "::layout.html.twig" %}
+
+{% block title %}{{ parent() }}{{ lesson.title }}{% endblock %}
+{% block pageTitle %}{{ lesson.title }}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('courses_list')}}" class="divider">{{ 'courses' | trans }}</a></li>
+	<li><a href="{{ path('course_view', {'course': lesson.course.id}) }}" class="divider">{{ lesson.course.title }}</a></li>
+	<li>{{ lesson.title }}</li>
+	<li>{{ inkychap.title }}</li>
+{% endblock %}
+
+{% block inky_body %}
+<div class="lesson_map_out">
+{% for mapout in mapout %}
+<button class="lesson_map_out {% if(mapout['status']) %}{{mapout['status']}}{% endif %}" type="button" ONCLICK="window.location.href='{{ path('course_take',{'course': lesson.course.id, 'lesson':lesson.id, inkychap:mapout['InkyChapId']}) }}'"
+data-toggle="tooltip" data-original-title="{{mapout['InkyChapTitle']}}" style="width:{{100 / nbinkychap }}%;">
+</button>
+{% endfor %}
+</div>
+<div>
+{% if inkychap.type == 'InkyText' %}
+	{{ render(controller('InkyCourseBundle:InkyChap:renderInkyText', {'inkyChap':inkychap.id })) }}
+{% endif %}
+{% if inkychap.type == 'InkyVideo' %}
+{{ render(controller('InkyCourseBundle:InkyChap:renderInkyVideo', {'inkyChap':inkychap.id })) }}
+{% endif %}
+{% if inkychap.type == 'InkyQuiz' %}
+{{ render(controller('InkyCourseBundle:InkyChap:renderInkyQuiz', {'inkyChap':inkychap.id })) }}
+{% endif %}
+</div>
+<div>
+Ici on met un lien vers le prochain inkychap
+</div>
+<div>
+Ici on met le contenu relatif à cet inky chap
+Questions<= Qu'on va pas tarder à virer d'ailler \ Forum \ 
+</div>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+$('[data-toggle="tooltip"]').tooltip({
+    'placement': 'top'
+});
+</script>
+{% endblock %}

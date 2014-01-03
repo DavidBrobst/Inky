@@ -1,0 +1,59 @@
+# User Index
+user_panel:
+    pattern: /panel
+    defaults: { _controller: InkyUserBundle:User:panel }
+
+# Login related
+fos_user_security_login:
+    pattern: /login
+    defaults: { _controller: FOSUserBundle:Security:login }
+
+fos_user_security_logout:
+    pattern: /logout
+    defaults: { _controller: FOSUserBundle:Security:logout}
+
+# User profile
+user_profile:
+    pattern: /profile/{user}
+    defaults: { _controller: InkyUserBundle:User:profile }
+    requirements:
+        user : \d+
+
+user_profile_edit:
+    pattern: /profile/edit
+    defaults: { _controller: InkyUserBundle:User:profileEdit }
+    requirements:
+        user : \d+
+password_edit:
+    pattern: /password
+    defaults: { _controller: FOSUserBundle:ChangePassword:changePassword }
+    requirements:
+        user : \d+
+user_progress:
+    pattern: /panel/progress
+    defaults: { _controller: InkyUserBundle:User:progress }
+    requirements:
+        user : \d+
+user_results:
+    pattern: /panel/results
+    defaults: { _controller: InkyUserBundle:User:grades }
+    requirements:
+        user : \d+
+user_job_to_do:
+    pattern: /panel/jobToDo
+    defaults: { _controller: InkyUserBundle:User:jobtodo }
+    requirements:
+        user : \d+
+user_discussion:
+    pattern: /panel/discussion
+    defaults: { _controller: InkyUserBundle:User:discussion }
+    requirements:
+        user : \d+
+user_wish_list:
+    pattern: /panel/wishList
+    defaults: { _controller: InkyUserBundle:User:wishlist }
+    requirements:
+        user : \d+
+join_group:
+    pattern: /joinGroup
+    defaults: { _controller: InkyUserBundle:User:joinGroup }

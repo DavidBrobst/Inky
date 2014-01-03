@@ -1,0 +1,7 @@
+parameters:
+#    inky_user.example.class: Inky\UserBundle\Example
+
+services:
+#    inky_user.example:
+#        class: %inky_user.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

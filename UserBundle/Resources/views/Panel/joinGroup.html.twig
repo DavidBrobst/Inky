@@ -1,0 +1,32 @@
+{% extends "InkyUserBundle::layout.html.twig" %}
+
+{% set page_name = 'Join a study group' %}
+{% block title %}{{ parent() }} {{page_name}}{% endblock %}
+{% block pageTitle %}{{page_name}}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('user_profile',{user : app.user.id})}}" class="divider">{{app.user.username}}</a></li>
+	<li>{{page_name}}</li>
+{% endblock %}
+{% block inky_body %}
+	{% for message in app.session.flashbag.get('joinGroupError') %}
+		<div class="alert alert-warning">{{ message |raw}}</div>
+	{% endfor %}
+	{% for message in app.session.flashbag.get('joinGroupSuccess') %}
+		<div class="alert alert-success">{{ message|raw }}</div>
+	{% endfor %}
+	<form action="{{ path('join_group') }}" method="get" class="form-horizontal" role="form"  >
+	<input name="sharecode" type="text" value="{% if sharecode is defined and sharecode %}{{sharecode}}{% endif %}"/>
+	<input  type="submit" value="Send"/>
+	</form>
+	{% if group is defined %}
+		{% if group %}
+		Do you wish to join the groupe of study {{group.name}} studying {{group.course.title}}
+		<form action="{{ path('join_group') }}" method="POST" class="form-horizontal" role="form"  >
+			<input style="visibility:hidden;" name="sharecode" type="text" value="{{sharecode}}"/>
+			<input name="confirm" type="submit" value="Confirm"/>
+		</form>		
+		{% else %}
+		Groupe non trouve
+		{% endif %}
+	{% endif %}
+{% endblock inky_body %}

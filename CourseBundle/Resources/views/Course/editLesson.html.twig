@@ -1,0 +1,77 @@
+{% extends "::layout.html.twig" %}
+{% block inky_body %}
+
+	{% for message in app.session.flashbag.get('EditLesson') %}
+	 <p>{{ message }}</p>
+	 {% endfor %}
+
+	<form action="{{ path('lesson_edit', {'lesson':lesson}) }}" method="post" {{form_enctype(form) }}>
+	{# Les erreurs g�n�rales du formulaire. #}
+	{{ form_errors(form) }}
+	<div>
+		{{ form_label(form.title, "Titre de la lesson") }}
+		{{ form_errors(form.title) }}
+		{{ form_widget(form.title) }}
+		
+	</div>
+	{{ form_rest(form) }}
+	<input type="submit" class="btn btn-primary" />
+	</form>
+
+<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+// On récupère la balise <div> en question qui contient l'attribut � data-prototype � qui nous interesse.
+var $container = $('{{formName}}');
+if ($container.length == 0) {
+$container = $('div#inky_coursebundle_lessonedittype_tags');
+}
+if ($container.length == 0) {
+$container = $('');
+}
+var $lienAjout = $('<a href="#" id="ajout_categorie" class="btn">Ajouter un tag</a>');
+$container.append($lienAjout);
+
+$lienAjout.click(function(e) {
+ajouterCategorie($container);
+e.preventDefault(); // Evite qu'un # apparaisse dans l'URL
+return false;
+});
+
+var index = $container.find(':input').length;
+if (index > 0) {
+
+$container.children('div').each(function() {
+ajouterLienSuppression($(this));
+});
+}
+// La fonction qui ajoute un formulaire Categorie
+function ajouterCategorie($container) {
+// Dans le contenu de l'attribut « data-prototype », on remplace :
+// - le texte "__name__label__" qu'il contient par le label du champ
+// - le texte "__name__" qu'il contient par le numéro du champ
+var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, 'Tag numero ' + (index+1))
+.replace(/__name__/g, index));
+// On ajoute au prototype un lien pour pouvoir supprimer la catégorie
+ajouterLienSuppression($prototype);
+// On ajoute le prototype modifié �  la fin de la balise <div>
+$container.append($prototype);
+// Enfin, on incrémente le compteur pour que le prochain ajout se fasse avec un autre numéro
+index++;
+}
+// La fonction qui ajoute un lien de suppression d'une catégorie
+function ajouterLienSuppression($prototype) {
+// Création du lien
+$lienSuppression = $('<a href="#" class="btn btn-danger">Supprimer</a><br />');
+// Ajout du lien
+$prototype.append($lienSuppression);
+// Ajout du listener sur le clic du lien
+$lienSuppression.click(function(e) {
+$prototype.remove();
+e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+return false;
+});
+}
+});
+</script>
+{% endblock %}

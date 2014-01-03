@@ -1,0 +1,36 @@
+{% extends "::layout.html.twig" %}
+
+{% block title %}
+	{{ course.title }} - {{ parent() }}
+{% endblock %}
+
+{% block inky_body %}
+	<h2>{{ course.title }}</h2>
+	{{ course.description }}
+	{% if course.image%}
+	<img src="{{ asset(course.image.webPath) }}" alt="{{ course.image.alt }}"/>
+	{% endif %}
+	{% for lesson in lessonList %}
+	<a href="{{ path('lesson_view', {'lesson': lesson.id}) }}" >{{lesson.title}}</a>
+	<p></p>
+	{% endfor %}
+			<a href="{{ path('course_edit', {'course': course.id}) }}" class="btn">Editer ce cours</a><br/>
+			<a href="{{ path('lesson_new', {'courseId': course.id}) }}" class="btn">Ajouter une lesson a ce cours</a><br/>
+
+	
+	{% if is_granted('ROLE_AUTEUR') %}
+	<p>
+	<a href="{{ path('InkyCourse_modifier', {'id': course.id}) }}" class="btn">
+	<i class="icon-edit"></i>
+	Modifier l'course
+	</a>
+	{% endif %}
+	{% if is_granted('ROLE_ADMIN') %}
+	<a href="{{ path('courses_delete', {'id': course.id}) }}" class="btn">
+	<i class="icon-trash"></i>
+	Supprimer l'course
+	</a>
+	{% endif %}
+
+{% endblock %}
+

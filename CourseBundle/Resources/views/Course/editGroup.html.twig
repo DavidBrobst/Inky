@@ -1,0 +1,51 @@
+{% extends "::layout.html.twig" %}
+
+{% block title %}{{ parent() }}{{'course.editGroup.edit_group' | trans }}{% endblock %}
+{% block pageTitle %}{{'course.editGroup.edit_group' | trans }}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('courses_list')}}" class="divider">{{'courses' | trans }}</a></li>
+	<li><a href="{{ path('course_view', {'course': group.course.id}) }}" class="divider">{{ group.course.title }}</a></li>
+	<li><a href="{{ path('course_group_edit', {'group': group.id}) }}" class="divider">{{ group.name }}</a></li>
+	<li>{{'course.editGroup.edit_group' | trans }}</li>
+{% endblock rootPath%}
+
+{% block inky_body %}
+
+	{% for message in app.session.flashbag.get('infoGroup') %}
+	 <p>{{ message }}</p>
+	 {% endfor %}
+
+	<form action="{{ path('course_group_edit', {'group':group.id}) }}" method="post" class="form-horizontal" role="form"  {{form_enctype(form) }}>
+	{{ form_errors(form) }}
+	<div  class="form-group">
+		{{ form_label(form.name, 'course.editGroup.group_name' | trans , {'label_attr': {'class': 'col-sm-3'}}) }}
+		{{ form_errors(form.name) }}
+		<div class="col-sm-9">
+			{{ form_widget(form.name, { 'attr': {'class': 'form-control'} }) }}
+		</div>
+	</div>
+	<div  class="form-group">
+		{{ form_label(form.description, 'course.editGroup.group_description' | trans , {'label_attr': {'class': 'col-sm-3'}}) }}
+		{{ form_errors(form.description) }}
+		<div class="col-sm-9">
+			{{ form_widget(form.description, { 'attr': {'class': 'form-control', 'placeholder':'This description will appear on the group page'} }) }}
+		</div>
+	</div>
+	<div  class="form-group">
+		{{ form_label(form.users, 'course.editGroup.group_members' | trans , {'label_attr': {'class': 'col-sm-3'}}) }}
+		{{ form_errors(form.users) }}
+		<div class="col-sm-9">
+			{{ form_widget(form.users, { 'attr': {'class': 'form-control'} }) }}
+		</div>
+	</div>
+	<div  class="form-group">
+		{{ form_label(form.roles, 'course.editGroup.group_roles' | trans , {'label_attr': {'class': 'col-sm-3'}}) }}
+		{{ form_errors(form.roles) }}
+		<div class="col-sm-9">
+			{{ form_widget(form.roles) }}
+		</div>
+	</div>
+	{{ form_rest(form) }}
+	<input type="submit" class="btn btn-primary" />
+	</form>
+{% endblock %}

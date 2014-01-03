@@ -1,0 +1,77 @@
+{% extends "::layout.html.twig" %}
+
+{% block title %}{{ parent() }}{{ 'course.addQuestion.add_question' | trans }}{% endblock %}
+{% block pageTitle %}{{ course.title }}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('courses_list')}}" class="divider">{{'course' | trans }}</a></li>
+	<li>{{ course.addQuestion.add_question | trans }}</li>
+{% endblock %}
+{% block inky_body %}
+<select id="inky_quizbundle_questiontype">
+	<option value="0">{{ 'course.addQuestion.choose_option' | trans }}</option>
+	{% for QuType in QuTypeList %}
+	 <option value="{{QuType.id}}">{{ QuType.TypeOfQuestion }}</option>
+	 {% endfor %}
+</select>
+<form action="{{ path('add_question', {quiz:quiz}) }}" method="post" enctype="multipart/form-data" }}>
+	<div id="question"></div>	
+<input type="submit" class="btn btn-primary" />
+</form>
+
+	
+	
+<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+<script type="text/javascript">
+
+
+
+var questionType = 'select#inky_quizbundle_questiontype';
+
+	$(questionType).change(function() {
+            var QuestionType = $(questionType+' option:selected').text();
+		  
+			$.ajax({
+                type: 'POST',
+                data: {'QuestionType' : QuestionType},          
+                url:  '{{ path("add_question", {quiz:quiz}) }}',      
+                success: function(response) {
+                  var questionBlock = $('#question');
+				  questionBlock.append(response);
+				  AnswerHandler();
+               },
+			  error: function (xhr, ajaxOptions, thrownError) {
+				alert(thrownError);
+			  }
+            });
+		  
+		  function AnswerHandler(){
+				
+				$container = $('div#inky_quizbundle_questiontype_answer');
+				var $addLink = $('<a href="#" id="ajout_answer" class="btn">{{ \'course.addQuestion.add_answer\' | trans }}</a>');
+				$container.append($addLink);
+				
+				$addLink.click(function(e) {addAnswer($container);return false;});
+
+				var answerNum = $container.find(':input').length;
+				if (answerNum > 0) {   $container.children('div').each(function() {AddremoveLink($(this));}); }
+				
+				function addAnswer($container)
+				{
+					var $prototype = $($container.attr('data-prototype').replace(/__char_prot__label__/g, 'Answer ' + (answerNum+1)).replace(/__char_prot__/g, answerNum));
+					AddremoveLink($prototype);
+					$container.append($prototype);
+					answerNum++;
+				}
+				function AddremoveLink($prototype)
+				{
+					$removeLink = $('<a href="#" class="btn btn-danger">X</a><br /><br />');
+					$prototype.append($removeLink);
+					$removeLink.click(function(e) {	$prototype.remove(); e.preventDefault(); return false;});
+				}
+		  }
+		  
+          });
+
+</script>
+
+{% endblock %}

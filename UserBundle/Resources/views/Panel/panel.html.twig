@@ -1,0 +1,44 @@
+{% extends "InkyUserBundle::layout.html.twig" %}
+
+{% set page_name = 'Panel' %}
+{% block title %}{{ parent() }} {{page_name}}{% endblock %}
+{% block pageTitle %}{{page_name}}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('user_profile',{user : app.user.id})}}" class="divider">{{app.user.username}}</a></li>
+	<li>{{page_name}}</li>
+{% endblock %}
+{% block inky_body %}
+	Here you can have a look at:
+	<ul>
+<h3>Courses</h3>	
+	<li>Untill Today
+		<ul>
+			<li><a href="{{ path('user_progress')}}">Progress</a></li>
+			<li><a href="{{ path('user_results')}}">Assignment results</a></li>
+		</ul>
+	</li>
+	<li>Today
+		<ul>
+			<li><a href="{{ path('user_job_to_do')}}">Job to be done</a></li>
+			<li><a href="{{ path('user_discussion')}}">Dicussions</a></li>
+			<li><a href="{{ path('join_group')}}">Join Group</a></li>
+		</ul>
+	</li>
+	<li>Tomorrow
+		<ul>
+			<li><a href="{{ path('user_wish_list')}}">Wish List</a></li>
+
+		</ul>
+	</li>
+<h3>My Courses, created by me ;)</h3>
+<h4>This will be despalyed as a filter in courses!</h4>
+	<li>You will then access those elements from there
+	<ul>
+		<li>Statistics</li>
+		<li>Access</li>
+		<li>Groups</li>
+	</ul>
+	</li>
+	
+	</ul>
+{% endblock inky_body %}

@@ -1,0 +1,166 @@
+{% extends "::layout.html.twig" %}
+
+{% block title %}{{ parent() }}{{ 'course.shouwCourses.course_list' | trans }}{% endblock %}
+{% block ownStyle %}
+<style type="text/css">
+.inky-template {
+  border:none;
+  box-shadow:none;
+  background:transparent;
+  padding:0;
+  margin:0;
+}
+ul.root-path{
+display:none;
+}
+#course_info{
+height:350px;
+width:100%;
+background:#0088cc;
+color:#fff;
+margin: 0 auto 15px auto;
+padding:15px;
+-webkit-box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+-moz-box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+}
+#course_info #description{
+}
+#course_info #description .stats{
+margin-top:25px;
+}
+#course_info #description .stats div.time,
+#course_info #description .stats div.followers{
+  font-family: Comic Sans, Comic Sans MS, cursive;
+}
+#course_info #description .stats div.course-material {
+   display:block;
+   margin: 0 auto;
+}
+#course_info #description h2{
+text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+font-weight: 500;
+line-height: 1.1;
+}
+#course_info #menu{
+height:100%;
+border-left:1px solid #cccccc;
+padding-top:30px;
+}
+#course_info #menu a{
+color:#fff;
+text-decoration:none;
+display:block;
+width:100%;
+border-bottom:1px solid #0099ff;
+padding:5px 5px 5px 15px;
+}
+#course_info #menu a:hover{
+background: #0099ff;
+}
+#course_info #menu a span.glyphicon{
+margin-right:10px;
+}
+#course_info #menu a span.glyphicon{
+
+}
+</style>
+{% endblock ownStyle %}
+{% block inky_body %}
+<div class="clearfix"></div>
+	<div id="course_info" class="row">
+	  <div id="description" class="col-md-9">
+		<h2>{{ course.title }}</h2>
+		<p>
+			{{ course.description|raw }}
+		</p>
+		<div class="stats"  class="row">
+			<div class="col-md-1 followers" data-toggle="tooltip" data-original-title="{{'course.viewCourse.people_took_class'|trans}}"><span class="glyphicon glyphicon-user"></span> 54</div>
+			<div class="col-md-1 time" data-toggle="tooltip" data-original-title="{{'course.viewCourse.estimated_time'|trans}}"><span class="glyphicon glyphicon-time"></span> 54</div>
+			<div class="col-md-2 course-material"  data-toggle="tooltip" data-original-title="{{'course.viewCourse.course_has'|trans}}">
+				<span class="glyphicon glyphicon-font"></span>
+				<span class="glyphicon glyphicon-facetime-video"></span>
+				<span class="glyphicon glyphicon-pencil"></span>
+			</div>
+		</div>
+	  </div>
+	  <div id="menu" class="col-md-3">
+		{% if is_granted('IS_AUTHENTICATED_REMEMBERED') and app.user.id == course.user.id %}
+			<a href="{{ path('course_administration', {'course': course.id}) }}">
+				<span class="glyphicon glyphicon-wrench"></span>{{'course.viewCourse.manage_course' | trans }}
+			</a>
+		{% endif %}
+		<a class="" href="#"><span class="glyphicon glyphicon-comment"></span>{{'Forum' | trans }}</a>
+		<a class="" href="{{ path('course_subscribe', {'course': course.id}) }}">
+			<span class="glyphicon glyphicon-share-alt"></span>
+			{{'course.viewCourse.take_course' | trans }}
+		</a>
+	  </div>
+	</div>
+	<div class="row">
+        <div class="col-sm-6 col-md-4">
+          <div class="thumbnail">
+            <div class="caption">
+              <h3>{{'course.viewCourse.author' | trans }}</h3>
+              <p>{{ course.description|raw }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="thumbnail">
+            <div class="caption">
+              <h3>{{'course.viewCourse.course_requirements' | trans }}</h3>
+              {{ course.prerequisite|raw }}
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="thumbnail">
+            <div class="caption">
+              <h3>{{'course.viewCourse.course_objectives' | trans }}</h3>
+              {{ course.objective|raw }}
+            </div>
+          </div>
+        </div>
+	</div>
+	
+	{% if course.image%}
+	<!-- <img src="{{ asset(course.image.webPath) }}" alt="{{ course.image.alt }}"/> -->
+	{% endif %}
+	<table class="table table-bordered">
+        <thead>
+        <tr>
+            <th style="width:15px;" class="text-center ">{{'course.viewCourse.number' | trans }}</th>
+            <th>{{'course.viewCourse.course_name' | trans }}</th>
+            <th>{{'course.viewCourse.status' | trans }}</th>
+            <th class="text-center">{{'course.viewCourse.action' | trans }}</th>
+        </tr>
+        </thead>
+	{% for lesson in lessonList %}
+        <tr class="success">
+			<td class="text-center">{{ lesson.orderid }}</td>
+			<td>{{ lesson.title }}</td>
+			<td>???????</td>
+            <td class="text-center"><a href="{{ path('lesson_view', {'lesson': lesson.id}) }}" class="button green" >
+			Review</a></td>
+		</tr>
+	{% endfor %}
+	</table>
+			
+	
+	{% if is_granted('ROLE_AUTEUR') %}
+	<p>
+	<a href="{{ path('InkyCourse_modifier', {'id': course.id}) }}" class="btn"><i class="icon-edit"></i>{{'course.viewCourse.edit_course' | trans }}</a>
+	{% endif %}
+
+
+{% endblock %}
+
+{% block javascripts %}{{ parent() }}
+<script type="text/javascript">
+$('[data-toggle="tooltip"]').tooltip({
+    'placement': 'bottom'
+});
+</script>
+{% endblock javascripts %}

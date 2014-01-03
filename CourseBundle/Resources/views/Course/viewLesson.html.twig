@@ -1,0 +1,28 @@
+{% extends "::layout.html.twig" %}
+
+{% block title %}
+	{{ lesson.title }} - {{ parent() }}
+{% endblock %}
+
+{% block inky_body %}
+	<h2>{{ lesson.title }}</h2>
+	{{ lesson.content }}
+
+	<p>
+	{% if is_granted('ROLE_AUTEUR') %}
+	<a href="{{ path('Inkylesson_modifier', {'lesson': lesson.id}) }}" class="btn">
+	<i class="icon-edit"></i>
+	Modifier l'lesson
+	</a>
+	{% endif %}
+	{% if is_granted('ROLE_ADMIN') %}
+	<a href="{{ path('lessons_delete', {'lesson': lesson.id}) }}" class="btn">
+	<i class="icon-trash"></i>
+	Supprimer l'lesson
+	</a>
+	{% endif %}
+	<a href="{{ path('lesson_edit', {'lesson': lesson.id}) }}" class="btn">Editer cette lesson</a><br/>
+	<a href="{{ path('add_quiz', {'lesson': lesson.id}) }}" class="btn">Creer un Quiz</a><br/>
+
+{% endblock %}
+

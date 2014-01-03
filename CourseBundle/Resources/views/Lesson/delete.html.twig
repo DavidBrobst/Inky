@@ -1,0 +1,17 @@
+{% extends "InkyUserBundle::layout.html.twig" %}
+
+{% block title %}{{ parent() }}{{ lesson.title }}{% endblock %}
+{% block pageTitle %}{{ lesson.title }}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('courses_list')}}" class="divider">Courses</a></li>
+	<li><a href="{{ path('course_view', {'course': lesson.course.id}) }}" class="divider">{{ lesson.course.title }}</a></li>
+	<li><a href="{{ path('lesson_view', {'lesson': lesson.id}) }}" class="divider">{{ lesson.title }}</a></li>
+	<li>Delete</li>
+{% endblock %}
+
+{% block inky_body %}
+
+Here you will be able to delete a lesson<br/>	
+{% include 'InkyCourseBundle:Lesson:lesson_menu.html.twig' with {'lesson': lesson} %}
+{% endblock %}
+

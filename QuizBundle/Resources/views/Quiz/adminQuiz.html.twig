@@ -1,0 +1,22 @@
+{% extends "InkyCourseBundle::layout.html.twig" %}
+
+{% block title %}{{ parent() }}{{ lesson.title }} - Quiz{% endblock %}
+{% block pageTitle %}{{ lesson.title }}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('courses_list')}}" class="divider">Courses</a></li>
+	<li><a href="{{ path('course_view', {'course': lesson.course.id}) }}" class="divider">{{ lesson.course.title }}</a></li>
+	<li><a href="{{ path('lesson_view', {'lesson': lesson.id}) }}" class="divider">{{ lesson.title }}</a></li>
+	<li>Quiz</li>
+{% endblock rootPath %}
+
+{% block inky_body %}
+{% include 'InkyCourseBundle:Lesson:lesson_menu.html.twig' with {'lesson': lesson} %}
+
+Here you can view all questions related to the Quiz and modify them individually
+
+For (question){
+Question <== Edit?
+Reponse Reponse Reponse
+}
+
+{% endblock inky_body %}

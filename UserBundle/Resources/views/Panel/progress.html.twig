@@ -1,0 +1,14 @@
+{% extends "InkyUserBundle::layout.html.twig" %}
+
+{% set page_name = 'Progress' %}
+{% block title %}{{ parent() }} {{page_name}}{% endblock %}
+{% block pageTitle %}{{page_name}}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('user_profile',{user : app.user.id})}}" class="divider">{{app.user.username}}</a></li>
+	<li>{{page_name}}</li>
+{% endblock %}
+{% block inky_body %}
+	Here you will have a chart with the progression of your skill points
+	Here you will have a chart with the progression of the time spent on the site
+	Here you will have a list of the acquired skills
+{% endblock inky_body %}

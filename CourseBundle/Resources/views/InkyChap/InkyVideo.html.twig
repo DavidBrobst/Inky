@@ -1,0 +1,23 @@
+{% if app.request.locale == 'fr' %}
+{% set lang='fr_FR' %}
+{% else %}
+{% set lang = 'en_GB' %}
+{% endif %}
+<div class="video-container">
+
+	<object width="100%" height="100%">
+		<param name="movie" value="{{url}}?hl={{lang}}&amp;version=3"></param>
+		<param name="allowFullScreen" value="true"></param>
+		<param name="allowscriptaccess" value="always"></param>
+		<param name="autoplay" value="1"></param>
+		<embed 	src="{{url}}?hl={{lang}}&amp;version=3"
+				type="application/x-shockwave-flash"
+				width="100%"
+				height="100%"
+				allowscriptaccess="always"
+				allowfullscreen="true"
+				autoplay="1">
+		</embed>
+	</object>
+
+</div>

@@ -1,0 +1,43 @@
+{% extends "::layout.html.twig" %}
+
+{% block title %}{{ parent() }}{{ lesson.title }} - {{ 'course.editlesson.edit_lesson' |trans }}{% endblock %}
+{% block pageTitle %}{{ 'course.editlesson.edit_lesson' |trans }}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('courses_list') }}" class="divider">{{ 'courses' |trans }}</a></li>
+	<li><a href="{{ path('course_view', {'course': lesson.course.id}) }}" class="divider">{{ lesson.course.title }}</a></li>
+	<li><a href="{{ path('lesson_view', {'lesson': lesson.id}) }}" class="divider">{{ lesson.title }}</a></li>
+	<li>{{ 'course.editlesson.edit_lesson' |trans }}</li>
+{% endblock %}
+
+{% block inky_body %}
+
+	<form action="{{ path('lesson_edit', {'lesson':lesson.id}) }}" method="post" {{form_enctype(form) }}>
+	{{ form_errors(form) }}
+	<div  class="form-group">
+		{{ form_label(form.title, 'course.newlesson.lesson_title' |trans , {'label_attr': {'class': 'col-sm-3'}}) }}
+		{{ form_errors(form.title) }}
+		<div class="col-sm-9">
+			{{ form_widget(form.title, { 'attr': {'class': 'form-control'} }) }}
+		</div>
+	</div>
+	
+	<div  class="form-group">
+		{{ form_label(form.tags, 'course.newlesson.lesson_tags' |trans , {'label_attr': {'class': 'col-sm-3'}}) }}
+		{{ form_errors(form.tags) }}
+		<div class="col-sm-9">
+			{{ form_widget(form.tags) }}
+		</div>
+	</div>
+	<div  class="form-group">
+		{{ form_widget(form.isPublic) }}
+		{{ form_label(form.isPublic, 'course.newlesson.render_public' |trans ) }}
+		{{ form_errors(form.isPublic) }}
+	</div>
+	
+	{{ form_rest(form) }}
+	<input type="submit" class="btn btn-primary" />
+	</form>
+
+{% include 'InkyCourseBundle:Course:tagJs.html.twig' %}	
+
+{% endblock %}

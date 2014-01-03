@@ -1,0 +1,12 @@
+{% extends "InkyUserBundle::layout.html.twig" %}
+
+{% set page_name = 'Wish List' %}
+{% block title %}{{ parent() }} {{page_name}}{% endblock %}
+{% block pageTitle %}{{page_name}}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('user_profile',{user : app.user.id})}}" class="divider">{{app.user.username}}</a></li>
+	<li>{{page_name}}</li>
+{% endblock %}
+{% block inky_body %}
+	When you see a lesson that you like you can add it here. You first need to learn the requirement for this lesson and then you can come back here.
+{% endblock inky_body %}

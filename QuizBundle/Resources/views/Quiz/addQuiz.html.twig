@@ -1,0 +1,180 @@
+{% extends "InkyCourseBundle::layout.html.twig" %}
+
+{% block title %}{{ parent() }}{{ lesson.title }} - Add a Quiz{% endblock %}
+{% block pageTitle %}{{ lesson.title }}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('courses_list')}}" class="divider">Courses</a></li>
+	<li><a href="{{ path('course_view', {'course': lesson.course.id}) }}" class="divider">{{ lesson.course.title }}</a></li>
+	<li><a href="{{ path('lesson_view', {'lesson': lesson.id}) }}" class="divider">{{ lesson.title }}</a></li>
+	<li>Add a Quiz</li>
+{% endblock rootPath %}	
+{% block inky_body %}
+{% include 'InkyCourseBundle:Lesson:lesson_menu.html.twig' with {'lesson': lesson} %}
+
+	{% for message in app.session.flashbag.get('info') %}
+	 <p>{{ message }}</p>
+	 {% endfor %}
+
+	<form action="{{ path('add_quiz', {lesson:lesson.id}) }}" method="post" {{form_enctype(form) }}>
+	{% include 'InkyQuizBundle:Quiz:quizType.html.twig' %}
+	
+	<input type="submit" class="btn btn-primary" />
+	</form>
+<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+var $container = $('{{formName}}');
+if ($container.length == 0) {
+$container = $('div#{{formName}}');
+}
+if ($container.length == 0) {
+$container = $('');
+}
+var $lienAjout = $('<a href="#" id="ajout_categorie" class="btn">Ajouter une question</a>');
+$container.append($lienAjout);
+
+$lienAjout.click(function(e) {
+ajouterCategorie($container);
+
+
+e.preventDefault(); // Evite qu'un # apparaisse dans l'URL
+return false;
+});
+
+var index = $container.find(':input').length;
+if (index > 0) {
+
+$container.children('div').each(function() {
+ajouterLienSuppression($(this));
+});
+}
+// La fonction qui ajoute un formulaire Categorie
+function ajouterCategorie($container) {
+var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, 'Question ' + (index+1))
+.replace(/__name__/g, index));
+ajouterLienSuppression($prototype);
+$container.append($prototype);
+var questionType = 'select#inky_quizbundle_quiztype_question_'+index+'_TypeOfQuestion';
+
+	$(questionType).change(function() {
+            var QuestionType = $(questionType+' option:selected').text();
+		  
+			$.ajax({
+                type: 'POST',
+                data: {'QuestionType' : QuestionType},          
+                url:  '{{ path("add_quiz", {lesson:lesson.id}) }}',      
+                success: function(response) {
+                  $prototype.append(response);doWhatYouHaveToDo();DoWhatYouCan();
+               },
+			  error: function (xhr, ajaxOptions, thrownError) {
+				alert(thrownError);
+			  }
+            });
+			function doWhatYouHaveToDo()
+			{
+			// On recupere la balise <div> en question qui contient l'attribut � data-prototype � qui nous interesse.
+			var $containere = $('inky_quizbundle_quiztype_'+QuestionType);
+			if ($containere.length == 0) {$containere = $('div#inky_quizbundle_quiztype_'+QuestionType);}
+			if ($containere.length == 0) {$containere = $('');}
+
+			ajouterCategorie($containere);
+			return false;
+
+			if (index > 0) { $containere.children('div').each(function() { ajouterLienSuppression($(this));});}
+
+			function ajouterCategorie($CatContent) {
+			var $prototype = $($CatContent.attr('data-prototype').replace(/__name__label__/g, '').replace(/__name__/g, index));
+			ajouterLienSuppression($prototype);	$prototype.addClass('pull-left tagBtn'); $CatContent.append($prototype);
+			}
+			function ajouterLienSuppression($prototype) {
+			$lienSuppression = $('<a href="#" class="btn btn-danger">X</a><br />');
+			$prototype.append($lienSuppression);
+
+			$lienSuppression.click(function(e) {
+			$prototype.remove();
+			e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+			return false;
+			});
+			}
+		  
+		  
+		  }
+		  
+		  function DoWhatYouCan(){
+		  		// Reponse
+				var $container2 = $('inky_quizbundle_quiztype_'+QuestionType+'_'+ index+'_answer');
+				if ($container2.length == 0) {
+				$container2 = $('div#inky_quizbundle_quiztype_'+QuestionType+'_'+ index+'_answer');
+				}
+				if ($container2.length == 0) {
+				$container2 = $('');
+				}
+				var $lienAjout2 = $('<a href="#" id="ajout_answer" class="btn">Ajouter une reponse</a>');
+				$container2.append($lienAjout2);
+				
+				$lienAjout2.click(function(e) {
+ajouterCategorie2($container2);
+				return false;
+				});
+
+				var index2 = $container2.find(':input').length;
+				if (index2 > 0) {
+
+				$container2.children('div').each(function() {
+				ajouterLienSuppression($(this));
+				});
+				}
+				function ajouterCategorie2($container2) {
+				var $prototype2 = $($container2.attr('data-prototype').replace(/__char_prot__label__/g, 'Reponse numero ' + (index2+1)).replace(/__char_prot__/g, index2));
+				ajouterLienSuppression($prototype2);
+				$container2.append($prototype2);
+				index2++;
+				}
+		  
+		  }
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+          }); 
+
+
+
+	
+
+index++;
+}
+// La fonction qui ajoute un lien de suppression d'une catégorie
+function ajouterLienSuppression($prototype) {
+// Création du lien
+$lienSuppression = $('<a href="#" class="btn btn-danger">Supprimer</a><br /><br />');
+// Ajout du lien
+$prototype.append($lienSuppression);
+// Ajout du listener sur le clic du lien
+$lienSuppression.click(function(e) {
+$prototype.remove();
+e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+return false;
+});
+}
+
+
+
+});
+
+
+</script>
+<script type="text/javascript">
+             
+             
+           
+   </script>
+{% endblock %}

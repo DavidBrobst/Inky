@@ -1,0 +1,44 @@
+	<div id="{{formName}}">
+		{{ form_errors(form.TfContent) }}
+		{{ form_widget(form.TfContent, {'attr': {'name2': 'hakeem'}}) }}
+		{{ form_rest(form) }}
+		
+	</div>
+	
+<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+// On recupere la balise <div> en question qui contient l'attribut « data-prototype » qui nous interesse.
+var $container = $('inky_quizbundle_quiztype_TfQuestion');
+if ($container.length == 0) {$container = $('div#inky_quizbundle_quiztype_TfQuestion');}
+if ($container.length == 0) {$container = $('');}
+
+var $lienAjout = $('<a href="#" id="add_tag" class="btn btn-info">Ajouter un tag</a><div class="clearfix"></div>');
+$container.append($lienAjout);
+
+$lienAjout.click(function(e) {
+ajouterCategorie($container);
+e.preventDefault(); // Evite qu'un # apparaisse dans l'URL
+return false;
+});
+
+var index = $container.find(':input').length;
+if (index > 0) { $container.children('div').each(function() { ajouterLienSuppression($(this));});}
+
+function ajouterCategorie($container) {
+var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, '')
+.replace(/__name__/g, index)); ajouterLienSuppression($prototype);
+$prototype.addClass('pull-left tagBtn');$prototype.children('div').children('div').children('label').remove(); $container.append($prototype); index++;
+}
+function ajouterLienSuppression($prototype) {
+$lienSuppression = $('<a href="#" class="btn btn-danger">X</a><br />');
+$prototype.children('div').children('div').append($lienSuppression);
+
+$lienSuppression.click(function(e) {
+$prototype.remove();
+e.preventDefault(); // Ã©vite qu'un # apparaisse dans l'URL
+return false;
+});
+}
+});
+</script>

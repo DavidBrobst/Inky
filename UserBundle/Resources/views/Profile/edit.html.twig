@@ -1,0 +1,11 @@
+{% extends "InkyUserBundle::layout.html.twig" %}
+{% set page_name = 'Edit Profile' %}
+{% block title %}{{ parent() }} {{page_name}}{% endblock %}
+{% block pageTitle %}{{page_name}}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('user_profile',{user : user.id})}}" class="divider">{{user.username}}</a></li>
+	<li>{{page_name}}</li>
+{% endblock %}
+{% block inky_body %}
+	ici on edite l'utilisateur
+{% endblock inky_body %}

@@ -1,0 +1,60 @@
+{% extends "::layout.html.twig" %}
+
+{% block title %}{{ parent() }}{{ 'course.shouwCourses.course_list' | trans }}{% endblock %}
+{% block ownStyle %}
+<style type="text/css">
+body{
+background-image: -ms-linear-gradient(bottom, #FFFFFF 0%, #00A3EF 100%);
+background-image: -moz-linear-gradient(bottom, #FFFFFF 0%, #00A3EF 100%);
+background-image: -o-linear-gradient(bottom, #FFFFFF 0%, #00A3EF 100%);
+background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #FFFFFF), color-stop(1, #00A3EF));
+background-image: -webkit-linear-gradient(bottom, #FFFFFF 0%, #00A3EF 100%);
+background-image: linear-gradient(to top, #FFFFFF 0%, #00A3EF 100%);
+}
+.inky-template {
+  border:none;
+  box-shadow:none;
+  background:transparent;
+  padding:0;
+  margin:0;
+}
+ul.root-path{
+display:none;
+}
+</style>
+{% endblock ownStyle %}
+{% block inky_body %}
+
+<div style="width:100%;margin-bottom:15px;">
+</div>
+	<div style="clear:both;"></div>
+<div class="masonry js-masonry"  data-masonry-options='{"isFitWidth": true}'>
+	{% for course in courseList %}
+	<div class="item">
+		{% if course.image%}
+		<div >
+			<a href="{{ path('course_view', {'course': course.id}) }}" class="courses">
+				<img  src="{{ asset(course.image.webPath) }}" alt="{{ course.image.alt }}"/>
+			</a>
+		</div>
+		{% else %}
+		<div >
+			<a href="{{ path('course_view', {'course': course.id}) }}" class="courses">
+				<img  src="../../web/uploads/img/course.png" alt="noimg"/>
+			</a>
+		</div>
+		{% endif %}
+		<div class="courses-detail" >
+			<a href="{{ path('course_view', {'course': course.id}) }}" ><h4>{{course.title}}</h4></a><br/>
+			{{course.description|raw}}<br/>
+		{% for tags in course.tags %}
+			<span class="label label-info">{{tags.tagLabel}}</span>
+		{% endfor %}
+		</div>
+		<div class="clearfix"></div>
+	</div>
+	{% endfor %}
+</div>	
+
+{% endblock %}
+

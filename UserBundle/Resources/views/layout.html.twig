@@ -1,0 +1,16 @@
+{% extends "::layout.html.twig" %}
+
+{% block inky_body %}
+ 
+{% for key, message in app.session.flashbag.all() %}
+	<div class="alert alert-{{ key }}">
+	{% for message in messages %}
+		{{ message|trans({}, 'FOSUserBundle') }}
+	{% endfor %}
+	</div>
+{% endfor %}
+
+{% block fos_user_content %}
+{% endblock fos_user_content %}
+
+{% endblock %}

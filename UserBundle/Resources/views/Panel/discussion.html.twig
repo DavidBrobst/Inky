@@ -1,0 +1,12 @@
+{% extends "InkyUserBundle::layout.html.twig" %}
+
+{% set page_name = 'Discussion' %}
+{% block title %}{{ parent() }} {{page_name}}{% endblock %}
+{% block pageTitle %}{{page_name}}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('user_profile',{user : app.user.id})}}" class="divider">{{app.user.username}}</a></li>
+	<li>{{page_name}}</li>
+{% endblock %}
+{% block inky_body %}
+	Here you will have answers to the questions you've asked and formum notifications
+{% endblock inky_body %}

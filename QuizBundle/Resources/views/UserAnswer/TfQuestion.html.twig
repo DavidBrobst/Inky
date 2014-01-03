@@ -1,0 +1,22 @@
+	
+	{{question.content}}<br/>
+	<input type="radio" name="TfAnswer" value="1" /> True<br/>
+	<input type="radio" name="TfAnswer" value="0" /> False<br/>
+
+	<script type="text/javascript">
+//Ajouter la question, le type de question et aller à la question suivante
+$("#next").click(function saveAnswer(){
+		var rep = $('input[type="radio"]:checked').val();
+		$.ajax({
+                type: 'POST',
+                data: {'QuestionType' : 'TfQuestion', 'QuestionId':{{question.id}}, 'answer':rep},          
+                url:  '{{ path("mock_answer", {type:"TfQuestion", id:question.id}) }}',      
+                success: function(response) {
+				  $("#next").unbind("click").click(function saveAnswer(){});
+               },
+			  error: function (xhr, ajaxOptions, thrownError) {
+				alert(thrownError);
+			  }
+            });
+        });
+</script>

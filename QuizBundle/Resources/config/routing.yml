@@ -1,0 +1,39 @@
+view_quiz:
+    pattern: /{lesson}/Quiz/take
+    defaults: { _controller: InkyQuizBundle:Quiz:viewQuiz }
+    requirements:
+        lesson : \d+
+add_quiz:
+    pattern: /{lesson}/Quiz/new
+    defaults: { _controller: InkyQuizBundle:Quiz:addQuiz }
+    requirements:
+        lesson : \d+
+edit_quizzes:
+    pattern: /{lesson}/Quizzes/edit
+    defaults: { _controller: InkyQuizBundle:Quiz:editQuizzes }
+    requirements:
+        lesson : \d+
+edit_quiz:
+    pattern: /Quiz/{quiz}/edit
+    defaults: { _controller: InkyQuizBundle:Quiz:editQuiz }
+    requirements:
+        lesson : \d+
+admin_quiz:
+    pattern: /Quiz/{quiz}/admin
+    defaults: { _controller: InkyQuizBundle:Quiz:adminQuiz }
+    requirements:
+        lesson : \d+
+add_question:
+    pattern: /{quiz}/question/new
+    defaults: { _controller: InkyQuizBundle:Quiz:addQuestion }
+    requirements:
+        lesson : \d+
+user_answer:
+    pattern: /quiz/{quiz}/take
+    defaults: { _controller: InkyQuizBundle:Quiz:takeQuiz }
+    requirements:
+        quiz : \d+
+mock_answer:
+    pattern: /mock/{type}/{id}
+    defaults: { _controller: InkyQuizBundle:Quiz:renderQuestion }
+    

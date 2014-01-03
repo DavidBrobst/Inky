@@ -1,0 +1,50 @@
+{% extends "::layout.html.twig" %}
+
+{% block title %}{{ parent() }}{{ course.title }}{% endblock %}
+{% block pageTitle %}{{ course.title }}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('courses_list')}}" class="divider">{{'course' | trans }}</a></li>
+	<li>{{ course.title }}</li>
+	
+{% endblock %}
+{% block inky_body %}
+	{% if lessons|length > 0 %}
+	{{ course.title }}
+	<a class="label label-warning" href="{{ path('course_edit', {'course': course.id}) }}">{{'course.adminCourse.edit_course' | trans }}</a>	
+	<a class="label label-info"  href="{{ path('course_group', {'course': course.id}) }}" class="btn">{{'course.adminCourse.manage_group' | trans }}</a>
+
+	{% for lesson in lessons %}
+	<div class="lesson" id="lesson-{{lesson.id}}">
+		<a class="label label-danger" style="margin:5px 5px 15px 0;" href="{{ path('lesson_edit', {'lesson': lesson.id}) }}" >{{'course.viewCourse.edit_lesson' | trans }}</a>
+		<a class="label label-warning" style="margin:5px 5px 15px 0;" href="{{ path('lesson_statistics', {'lesson': lesson.id}) }}" >{{'course.viewCourse.lesson_stats' | trans }}</a>
+		<a name="{{lesson.id}}" class="label label-info" style="margin:5px 5px 15px 0;" href="#" >{{'course.viewCourse.lesson_detail' | trans }}</a>
+		{{lesson.title}}
+	</div>
+	{% endfor %}
+	{% else %}
+		{{ 'course.adminCourse.no_lesson_available'| trans }}
+	{% endif %}
+		<a href="{{ path('lesson_new', {'course': course.id}) }}" class="btn">+ {{'course.adminCourse.add_lesson' | trans }}</a>
+
+{% endblock inky_body%}
+
+{% block javascripts %}{{ parent() }}
+<script type="text/javascript">
+	var $lesson = $('.lesson');
+	$lesson.find('a.label-info').click(function() {
+            var lesson = parseInt($(this).attr('name'));
+			$.ajax({
+                type: 'POST',
+                data: {'lessonId' : lesson},          
+				url:  '{{ path("course_administration", {course:course.id}) }}',      
+				success: function(response) {
+				$('#lesson-'+lesson).append(response);
+               },
+			  error: function (xhr, ajaxOptions, thrownError) {
+				alert(thrownError);
+			  }
+            });	  
+          }); 
+
+</script>
+{% endblock javascripts %}

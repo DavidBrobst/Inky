@@ -1,0 +1,119 @@
+{% extends "::layout.html.twig" %}
+{% block inky_body %}
+
+	{% for message in app.session.flashbag.get('info') %}
+	 <p>{{ message }}</p>
+	 {% endfor %}
+
+	<form action="{{ path('add_quiz', {lesson:lesson}) }}" method="post" {{form_enctype(form) }}>
+	{# Les erreurs g�n�rales du formulaire. #}
+	{{ form_errors(form) }}
+	<div>
+		{{ form_label(form.title, "Titre du Quiz") }}
+		{{ form_errors(form.title) }}
+		{{ form_widget(form.title) }}
+	</div>
+
+	<div>
+	{{ form_label(form.description, "Description du Quiz") }}
+	{{ form_errors(form.description) }}
+	{{ form_widget(form.description) }}
+	</div>
+
+	{{ form_rest(form) }}
+	<input type="submit" class="btn btn-primary" />
+	</form>
+<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+var $container = $('{{formName}}');
+if ($container.length == 0) {
+$container = $('div#{{formName}}');
+}
+if ($container.length == 0) {
+$container = $('');
+}
+var $lienAjout = $('<a href="#" id="ajout_categorie" class="btn">Ajouter une question</a>');
+$container.append($lienAjout);
+
+$lienAjout.click(function(e) {
+ajouterCategorie($container);
+e.preventDefault(); // Evite qu'un # apparaisse dans l'URL
+return false;
+});
+
+var index = $container.find(':input').length;
+if (index > 0) {
+
+$container.children('div').each(function() {
+ajouterLienSuppression($(this));
+});
+}
+// La fonction qui ajoute un formulaire Categorie
+function ajouterCategorie($container) {
+// Dans le contenu de l'attribut « data-prototype », on remplace :
+// - le texte "__name__label__" qu'il contient par le label du champ
+// - le texte "__name__" qu'il contient par le numéro du champ
+var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, 'Question ' + (index+1))
+.replace(/__name__/g, index));
+// On ajoute au prototype un lien pour pouvoir supprimer la catégorie
+ajouterLienSuppression($prototype);
+// On ajoute le prototype modifié �  la fin de la balise <div>
+$container.append($prototype);
+
+
+
+
+	// Reponse
+	var $container2 = $('{{formName}}_'+ index+'_answer');
+	if ($container2.length == 0) {
+	$container2 = $('div#{{formName}}_'+ index+'_answer');
+	}
+	if ($container2.length == 0) {
+	$container2 = $('');
+	}
+	var $lienAjout2 = $('<a href="#" id="ajout_answer" class="btn">Ajouter une reponse</a>');
+	$container2.append($lienAjout2);
+	
+	$lienAjout2.click(function(e) {
+	ajouterCategorie2($container2);
+	e.preventDefault(); // Evite qu'un # apparaisse dans l'URL
+	return false;
+	});
+
+	var index2 = $container2.find(':input').length;
+	if (index2 > 0) {
+
+	$container2.children('div').each(function() {
+	ajouterLienSuppression($(this));
+	});
+	}
+	function ajouterCategorie2($container2) {
+	var $prototype2 = $($container2.attr('data-prototype').replace(/__char_prot__label__/g, 'Reponse numero ' + (index2+1))
+.replace(/__char_prot__/g, index2));
+	ajouterLienSuppression($prototype2);
+	$container2.append($prototype2);
+	index2++;
+	}
+
+index++;
+}
+// La fonction qui ajoute un lien de suppression d'une catégorie
+function ajouterLienSuppression($prototype) {
+// Création du lien
+$lienSuppression = $('<a href="#" class="btn btn-danger">Supprimer</a><br /><br />');
+// Ajout du lien
+$prototype.append($lienSuppression);
+// Ajout du listener sur le clic du lien
+$lienSuppression.click(function(e) {
+$prototype.remove();
+e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+return false;
+});
+}
+
+});
+
+
+</script>
+{% endblock %}

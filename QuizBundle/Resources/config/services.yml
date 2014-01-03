@@ -1,0 +1,7 @@
+parameters:
+#    inky_quiz.example.class: Inky\QuizBundle\Example
+
+services:
+#    inky_quiz.example:
+#        class: %inky_quiz.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

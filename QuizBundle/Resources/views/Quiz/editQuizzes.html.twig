@@ -1,0 +1,17 @@
+{% extends "InkyCourseBundle::layout.html.twig" %}
+
+{% block title %}{{ parent() }}{{ lesson.title }} - List of Quizzes{% endblock %}
+{% block pageTitle %}{{ lesson.title }}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('courses_list')}}" class="divider">Courses</a></li>
+	<li><a href="{{ path('course_view', {'course': lesson.course.id}) }}" class="divider">{{ lesson.course.title }}</a></li>
+	<li><a href="{{ path('lesson_view', {'lesson': lesson.id}) }}" class="divider">{{ lesson.title }}</a></li>
+	<li>List of Quizzes</li>
+{% endblock %}
+	
+{% block content_body %}
+{% include 'InkyCourseBundle:Lesson:lesson_menu.html.twig' with {'lesson': lesson.id} %}
+
+	Here you will have a list of Quizzes and the possibility to select one to got to editQuiz
+	
+{% endblock %}

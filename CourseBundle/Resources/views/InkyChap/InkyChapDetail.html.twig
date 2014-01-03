@@ -1,0 +1,25 @@
+<div>
+{% if InkyChap|length >0 %}
+
+{% for InkyChap in InkyChap %}
+	<div class="InkyChap">
+		<a class="label label-danger" href="{{ path('lesson_edit', {'lesson': InkyChap.lesson.id}) }}" >
+			{{'course.inkyChapDetail.edit_lesson' | trans }}
+		</a>
+		<a class="label label-warning" style="margin:5px 5px 15px 0;" href="{{ path('inky_chap_statistics', {'inkychap': InkyChap.id}) }}" >
+			{{'course.inkyChapDetail.lesson_stats' | trans }}
+		</a>
+		<a name="{{InkyChap.lesson.id}}" class="label label-info" style="margin:5px 5px 15px 0;" href="#" >
+			{{'course.inkyChapDetail.lesson_detail' | trans }}
+		</a>
+		<a href="{{ path('course_take', {'course': InkyChap.lesson.course.id, 'lesson': InkyChap.lesson.id, 'inkychap': InkyChap.id}) }}">
+			{{'course.inkyChapDetail.inkychap_view' | trans }}
+		</a>
+		{{InkyChap.title}}
+	</div> 
+{% endfor %}
+{% else %}
+Nothing found
+{% endif %}
+
+</div>

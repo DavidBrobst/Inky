@@ -1,0 +1,15 @@
+{% extends "InkyUserBundle::layout.html.twig" %}
+
+{% set page_name = 'Profile' %}
+{% block title %}{{ parent() }} {{page_name}}{% endblock %}
+{% block pageTitle %}{{page_name}}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('user_profile',{user : user.id})}}" class="divider">{{user.username}}</a></li>
+	<li>{{page_name}}</li>
+{% endblock %}
+{% block inky_body %}
+	{% if app.user.id|number_format == user.id %}
+		<a class="btn btn-warning" style="margin:5px 5px 15px 0;" href="{{ path('user_profile_edit')}}">Editer</a>
+	{% endif %}
+	{% include "FOSUserBundle:Profile:show_content.html.twig" %}
+{% endblock inky_body %}

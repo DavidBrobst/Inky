@@ -1,0 +1,77 @@
+{% extends "::layout.html.twig" %}
+
+{% block title %}{{ parent() }}{{'course.editCourse.edit_course' | trans }}{% endblock %}
+
+{% block pageTitle %}{{'course.editCourse.create_course' | trans }}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('courses_list')}}" class="divider">{{'courses' | trans }}</a></li>
+	<li><a href="{{ path('course_view', {'course': course.id}) }}" class="divider">{{ course.title }}</a></li>
+	<li>{{'course.editCourse.edit_course' | trans }}</li>
+{% endblock rootPath%}
+{% block inky_body %}
+
+	{% for message in app.session.flashbag.get('info') %}
+	 <p>{{ message }}</p>
+	 {% endfor %}
+
+	<form action="{{ path('course_edit', {'course':course.id}) }}" method="post" {{form_enctype(form) }}>
+	{% if form_errors(form) %}<div class="alert alert-danger">{{ form_errors(form) }}</div>{%endif%}
+	<div  class="form-group">
+		{{ form_label(form.title, 'course.new.course_title' | trans , {'label_attr': {'class': 'col-sm-3'}}) }}
+		{{ form_errors(form.title) }}
+		<div class="col-sm-9">
+			{{ form_widget(form.title, { 'attr': {'class': 'form-control'} }) }}
+		</div>
+	</div>
+
+	<div  class="form-group">
+		{{ form_label(form.description, 'course.new.course_description' | trans , {'label_attr': {'class': 'col-sm-3'}})  }}
+		{{ form_errors(form.description) }}
+		<div class="col-sm-9">
+			{{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+		</div>
+	</div>
+	<div  class="form-group">
+		{{ form_label(form.objective, 'course.new.course_prerequisite' | trans , {'label_attr': {'class': 'col-sm-3'}})  }}
+		{{ form_errors(form.objective) }}
+		<div class="col-sm-9">
+			{{ form_widget(form.objective, {'attr': {'class': 'form-control', 'required':'required'}}) }}
+		</div>
+	</div>
+	<div  class="form-group">
+		{{ form_label(form.prerequisite, 'course.new.course_objectives' | trans , {'label_attr': {'class': 'col-sm-3'}})  }}
+		{{ form_errors(form.prerequisite) }}
+		<div class="col-sm-9">
+			{{ form_widget(form.prerequisite, {'attr': {'class': 'form-control'}}) }}
+		</div>
+	</div>
+	<hr>
+	<div  class="form-group">
+		{{ form_label(form.image, 'course.new.course_image' | trans , {'label_attr': {'class': 'col-sm-3'}}) }}
+		{{ form_errors(form.image) }}
+		<div class="col-sm-9">
+			{{ form_widget(form.image) }}
+		</div>
+	</div>
+
+	<div  class="form-group">
+		{{ form_label(form.tags, 'course.new.add_tag' | trans , {'label_attr': {'class': 'col-sm-3'}}) }}
+		{{ form_errors(form.tags) }}
+		<div class="col-sm-9">
+			{{ form_widget(form.tags) }}
+		</div>
+	</div>
+	
+	<div  class="form-group">
+		{{ form_widget(form.isPublic) }}
+		{{ form_label(form.isPublic, 'course.new.publish' | trans ) }}
+		{{ form_errors(form.isPublic) }}
+	</div>
+	{{ form_rest(form) }}
+
+	<input type="submit" class="btn btn-primary" />
+	</form>
+
+{% include 'InkyCourseBundle:Course:tagJs.html.twig' %}	
+
+{% endblock %}

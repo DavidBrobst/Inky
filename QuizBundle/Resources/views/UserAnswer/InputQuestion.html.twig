@@ -1,0 +1,23 @@
+	
+	{{question.content}}<br/>
+	
+	<input id="InputAnswer" type="text" name="InputAnswer" />
+
+
+	<script type="text/javascript">
+//Ajouter la question, le type de question et aller à la question suivante
+$("#next").click(function saveAnswer(){
+		var rep = $('#InputAnswer').val();
+		$.ajax({
+                type: 'POST',
+                data: {'QuestionType' : 'McQuestion', 'QuestionId':{{question.id}}, 'answer':rep},          
+                url:  '{{ path("mock_answer", {type:"InputQuestion", id:question.id}) }}',      
+                success: function(response) {
+				  $("#next").unbind("click").click(function saveAnswer(){});
+               },
+			  error: function (xhr, ajaxOptions, thrownError) {
+				alert(thrownError);
+			  }
+            });
+        });
+</script>

@@ -1,0 +1,23 @@
+	
+	{{question.content}}<br/>
+	
+	<textarea id="SubmitAnswer" name="SubmitAnswer"></textarea>
+
+
+	<script type="text/javascript">
+//Ajouter la question, le type de question et aller à la question suivante
+$("#next").click(function saveAnswer(){
+		var rep = $('#SubmitAnswer').val();
+		$.ajax({
+                type: 'POST',
+                data: {'QuestionType' : 'SubmitQuestion', 'QuestionId':{{question.id}}, 'answer':rep},          
+                url:  '{{ path("mock_answer", {type:"SubmitQuestion", id:question.id}) }}',      
+                success: function(response) {
+				  $("#next").unbind("click").click(function saveAnswer(){});
+               },
+			  error: function (xhr, ajaxOptions, thrownError) {
+				alert(thrownError);
+			  }
+            });
+        });
+</script>

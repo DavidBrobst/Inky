@@ -1,0 +1,153 @@
+#Course routing
+inky_presentation:
+  pattern: /index
+  defaults: { _controller: InkyCourseBundle:Course:index }
+
+course_view:
+  pattern: /course/{course}
+  defaults: { _controller: InkyCourseBundle:Course:viewCourse }
+  requirements:
+    course:   \d+
+
+courses_list:
+  pattern: /Courses/All
+  defaults: { _controller: InkyCourseBundle:Course:showCourses}
+  requirements:
+    page:   \d+
+
+course_administration:
+  pattern: /course/{course}/admin
+  defaults: { _controller: InkyCourseBundle:Course:adminCourse }
+  requirements:
+    course:   \d+
+
+course_subscribe:
+  pattern: /course/{course}/subscribe
+  defaults: { _controller: InkyCourseBundle:Course:subscribeCourse }
+  requirements:
+    course:   \d+
+
+course_take:
+  pattern: Course/{course}/{lesson}/{inkychap}
+  defaults: { _controller: InkyCourseBundle:InkyChap:viewInkyChap }
+  requirements:
+    course:   \d+
+    lesson:   \d+
+    inkychap:   \d+
+
+course_new:
+  pattern: /course/new
+  defaults: { _controller: InkyCourseBundle:Course:addCourse }
+
+course_edit:
+  pattern: /course/{course}/edit
+  defaults: { _controller: InkyCourseBundle:Course:editCourse }
+  requirements:
+    id:   \d+
+
+course_group:
+  pattern: /{course}/groups
+  defaults: { _controller: InkyCourseBundle:Course:viewGroup }
+  requirements:
+    id:   \d+
+
+course_group_edit:
+  pattern: /group/{group}/edit
+  defaults: { _controller: InkyCourseBundle:Course:editGroup }
+  requirements:
+    id:   \d+
+
+course_add_group:
+  pattern: /{course}/group/new
+  defaults: { _controller: InkyCourseBundle:Course:addGroup }
+  requirements:
+    id:   \d+
+
+course_delete:
+  pattern: /course/{id}/delete
+  defaults: { _controller: InkyCourseBundle:Course:delete }
+  requirements:
+    id:   \d+
+
+#Lesson routing
+lessons_index:
+  pattern: /lessons
+  defaults: { _controller: InkyCourseBundle:Lesson:index, page: 1 }
+
+lessons_list:
+  pattern: /lessons/{page}
+  defaults: { _controller: InkyCourseBundle:Lesson:index, page: 1 }
+  requirements:
+    page:   \d+
+
+lesson_statistics:
+  pattern: /lesson/{lesson}/stats
+  defaults: { _controller: InkyCourseBundle:Lesson:stats}
+  requirements:
+    page:   \d+
+
+lesson_new:
+  pattern: /lesson/new/{course}
+  defaults: { _controller: InkyCourseBundle:Lesson:newLesson }
+  requirements:
+    course:   \d+
+
+lesson_view:
+  pattern: /lesson/{lesson}
+  defaults: { _controller: InkyCourseBundle:Lesson:viewLesson }
+  requirements:
+    lesson:   \d+
+
+lesson_edit:
+  pattern: /lesson/{lesson}/edit
+  defaults: { _controller: InkyCourseBundle:Lesson:editLesson }
+  requirements:
+    id:   \d+
+
+lesson_delete:
+  pattern: /lesson/{lesson}/delete
+  defaults: { _controller: InkyCourseBundle:Lesson:delete }
+  requirements:
+    lesson:   \d+
+lesson_ask:
+  pattern: /lesson/{lesson}/ask
+  defaults: { _controller: InkyCourseBundle:Lesson:ask }
+  requirements:
+    id:   \d+
+lesson_statistics:
+  pattern: /lesson/{lesson}/statistics
+  defaults: { _controller: InkyCourseBundle:Lesson:statistics }
+  requirements:
+    id:   \d+
+lesson_documentation:
+  pattern: /{lesson}/documentation
+  defaults: { _controller: InkyCourseBundle:Lesson:documentation }
+  requirements:
+    id:   \d+
+
+#InkyChapter Routing
+inkychap_add:
+  pattern: /{lesson}/chap/new
+  defaults: { _controller: InkyCourseBundle:InkyChap:addInkyChap }
+  requirements:
+    id:   \d+
+inky_video_add:
+  pattern: /{lesson}/Video/new
+  defaults: { _controller: InkyCourseBundle:InkyChap:addInkyVideo }
+  requirements:
+    id:   \d+
+inky_text_add:
+  pattern: /{lesson}/Text/new
+  defaults: { _controller: InkyCourseBundle:InkyChap:addInkyText }
+  requirements:
+    id:   \d+
+inky_chap_statistics:
+  pattern: /InkyChap/{inkychap}/stats
+  defaults: { _controller: InkyCourseBundle:InkyChap:stats}
+  requirements:
+    page:   \d+
+
+#Search Routing
+general_search:
+    pattern: /search/{search}
+    defaults: {_controller: InkyCourseBundle:Course:generalSearch}

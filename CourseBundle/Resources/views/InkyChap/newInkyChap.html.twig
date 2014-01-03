@@ -1,0 +1,19 @@
+{% extends "::layout.html.twig" %}
+
+{% block title %}{{ parent() }}{{ lesson.title }}{% endblock %}
+{% block pageTitle %}{{ lesson.title }}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('courses_list')}}" class="divider">{{ 'courses' | trans }}</a></li>
+	<li><a href="{{ path('course_view', {'course': lesson.course.id}) }}" class="divider">{{ lesson.course.title }}</a></li>
+	<li>{{ lesson.title }}</li>
+	<li>{{ 'couse.inkyChap.new_inky_chap' | trans }}</li>
+{% endblock %}
+
+{% block inky_body %}
+
+Salut, dans cette nouvelle partie de la leçon tu veux<br/>
+<a href="{{ path('inky_video_add', {'lesson': lesson.id}) }}" class="divider">{{ 'couse.inkyChap.new_Video' | trans }}</a>
+<a href="{{ path('inky_text_add', {'lesson': lesson.id}) }}" class="divider">{{ 'couse.inkyChap.new_text_content' | trans }}</a>
+<a href="{{ path('add_quiz', {'lesson': lesson.id}) }}" class="divider">{{ 'couse.inkyChap.new_quiz' | trans }}</a>
+
+{% endblock %}

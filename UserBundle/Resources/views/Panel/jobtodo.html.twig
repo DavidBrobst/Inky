@@ -1,0 +1,12 @@
+{% extends "InkyUserBundle::layout.html.twig" %}
+
+{% set page_name = 'Job To Do' %}
+{% block title %}{{ parent() }} {{page_name}}{% endblock %}
+{% block pageTitle %}{{page_name}}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('user_profile',{user : app.user.id})}}" class="divider">{{app.user.username}}</a></li>
+	<li>{{page_name}}</li>
+{% endblock %}
+{% block inky_body %}
+	Here you have a list of assignment given to you by the guy in charge of a course you have taken
+{% endblock inky_body %}

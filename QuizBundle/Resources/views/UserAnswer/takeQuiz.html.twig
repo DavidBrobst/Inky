@@ -1,0 +1,42 @@
+	{% set totalCount = QuRef|length %}
+	
+	<div id="quiz">
+	</div>
+	
+<input id="next" type="submit" value="Next" name="0" class="btn btn-primary" />
+<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+
+<script type="text/javascript">
+var question = [];
+{% for question in QuRef %}
+question[{{ loop.index }}] = new Array();
+question[{{ loop.index }}].push('{{ question.0 }}',{{ question.1 }});
+{% endfor %}
+$("#next").click(function() {
+	var current = parseInt($('#next').attr('name'));
+	if( current == {{totalCount}}){alert('{{ "course.takeQuiz.last_quiz" | trans}}');}
+	else{
+	var next = current+1;
+	$('#next').attr('name', next);
+	var nextType = question[next][0];
+	var nextId= question[next][1];
+	$loadingImg = '<img alt="loading" id="loadingImg" src="../../../ajax-loader.gif"/>'
+	$quiz = $('#quiz');
+	$quiz.empty();
+	$quiz.append($loadingImg);
+	$.ajax({
+                type: 'POST',
+                data: {'QuestionType' : nextType, 'QuestionId':nextId},          
+                url:  '{{ path("user_answer", {quiz:quiz.id}) }}',      
+                success: function(response) {
+					$quiz.empty();
+					$quiz.append(response);
+				  
+               },
+				error: function (xhr, ajaxOptions, thrownError) {
+				alert(thrownError);
+			  }
+            });
+	}
+ });
+</script>
