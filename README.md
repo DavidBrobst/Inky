@@ -1,7 +1,7 @@
 Inky
 ====
 
-Develloped using the symfony framework, InkyLab is an educational platform with these features:
+Develloped using the symfony framework, Inky is an educational platform with these features:
 
 - Designed to help you get new lifetime skills or learn about helpfull tricks
 - No tests, course completion alone should be proof of your effort and newly acquired skill(s)
