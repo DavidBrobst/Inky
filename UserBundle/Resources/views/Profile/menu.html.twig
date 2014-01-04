@@ -1,0 +1,9 @@
+
+	<div style="text-align: center;">
+		<ul class="panel-bar profile">
+			<li><a href="{{ path('user_profile' , {'user' : app.user.id}) }}"><span class="glyphicon glyphicon-wrench"></span> {{'user.menu.profile' |trans }}</a></li>
+			<li><a href="{{ path('password_edit') }}"><span class="glyphicon glyphicon-lock"></span> {{'user.menu.password' | trans }}</a></li>
+			<li><a href="{{ path('user_panel') }}"><span class="glyphicon glyphicon-user"></span> {{'user.menu.panel' | trans }}</a></li>
+		</ul>
+	</div>
+<div class="clearfix" style="width:100%;"></div>

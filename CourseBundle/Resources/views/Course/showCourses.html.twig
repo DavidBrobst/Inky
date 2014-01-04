@@ -24,11 +24,33 @@ display:none;
 </style>
 {% endblock ownStyle %}
 {% block inky_body %}
-
+<div class="courses-search-box" style="width:100%;padding:15px;">
+    <div class="input-group input-group-lg inner-courses-search-box" style="margin:auto;">
+		<input type="text" class="form-control"  placeholder="{{'search'|trans}}">
+		<div class="input-group-btn">
+			<button type="button" class="btn btn-default" tabindex="-1"><span class="glyphicon glyphicon-search"></span></button>
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+				<span class="glyphicon glyphicon-filter"></span>
+				<span class="sr-only">Toggle Dropdown</span>
+			</button>
+			<ul class="dropdown-menu pull-right" role="menu">
+				<li class="dropdown-header">{{'filter.filter'|trans}}</li>
+				<li><a href="#">{{'filter.relevance'|trans}}</a></li>
+				<li><a href="#">{{'filter.ratings'|trans}}</a></li>
+				<li><a href="#">{{'filter.creationDate'|trans}}</a></li>
+				<li><a href="#">{{'filter.popular'|trans}}</a></li>
+				<li class="divider"></li>
+				<li class="dropdown-header">{{'filter.duration'|trans}}</li>
+				<li><a href="#">{{'filter.duration.long'|trans}}</a></li>
+				<li><a href="#">{{'filter.duration.short'|trans}}</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
 <div style="width:100%;margin-bottom:15px;">
 </div>
 	<div style="clear:both;"></div>
-<div class="masonry js-masonry"  data-masonry-options='{"isFitWidth": true}'>
+<div class="masonry js-masonry"  data-masonry-options='{"isFitWidth": true, "gutter": 12}'>
 	{% for course in courseList %}
 	<div class="item">
 		{% if course.image%}

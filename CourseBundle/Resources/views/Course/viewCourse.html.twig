@@ -14,7 +14,7 @@ ul.root-path{
 display:none;
 }
 #course_info{
-height:350px;
+min-height:300px;
 width:100%;
 background:#0088cc;
 color:#fff;
@@ -47,6 +47,7 @@ line-height: 1.1;
 height:100%;
 border-left:1px solid #cccccc;
 padding-top:30px;
+padding-bottom:30px;
 }
 #course_info #menu a{
 color:#fff;
@@ -70,22 +71,22 @@ margin-right:10px;
 {% block inky_body %}
 <div class="clearfix"></div>
 	<div id="course_info" class="row">
-	  <div id="description" class="col-md-9">
+	  <div id="description" class="col-md-9 col-sm-8 col-xs-6">
 		<h2>{{ course.title }}</h2>
 		<p>
 			{{ course.description|raw }}
 		</p>
 		<div class="stats"  class="row">
-			<div class="col-md-1 followers" data-toggle="tooltip" data-original-title="{{'course.viewCourse.people_took_class'|trans}}"><span class="glyphicon glyphicon-user"></span> 54</div>
-			<div class="col-md-1 time" data-toggle="tooltip" data-original-title="{{'course.viewCourse.estimated_time'|trans}}"><span class="glyphicon glyphicon-time"></span> 54</div>
-			<div class="col-md-2 course-material"  data-toggle="tooltip" data-original-title="{{'course.viewCourse.course_has'|trans}}">
+			<div class="col-xs-1 followers" data-toggle="tooltip" data-original-title="{{'course.viewCourse.people_took_class'|trans}}"><span class="glyphicon glyphicon-user"></span> 54</div>
+			<div class="col-xs-1 time" data-toggle="tooltip" data-original-title="{{'course.viewCourse.estimated_time'|trans}}"><span class="glyphicon glyphicon-time"></span> 54</div>
+			<div class="col-xs-2 course-material"  data-toggle="tooltip" data-original-title="{{'course.viewCourse.course_has'|trans}}">
 				<span class="glyphicon glyphicon-font"></span>
 				<span class="glyphicon glyphicon-facetime-video"></span>
 				<span class="glyphicon glyphicon-pencil"></span>
 			</div>
 		</div>
 	  </div>
-	  <div id="menu" class="col-md-3">
+	  <div id="menu" class="col-md-3 col-sm-4  col-xs-6">
 		{% if is_granted('IS_AUTHENTICATED_REMEMBERED') and app.user.id == course.user.id %}
 			<a href="{{ path('course_administration', {'course': course.id}) }}">
 				<span class="glyphicon glyphicon-wrench"></span>{{'course.viewCourse.manage_course' | trans }}

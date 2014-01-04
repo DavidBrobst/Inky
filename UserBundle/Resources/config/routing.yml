@@ -21,7 +21,7 @@ user_profile:
 
 user_profile_edit:
     pattern: /profile/edit
-    defaults: { _controller: InkyUserBundle:User:profileEdit }
+    defaults: { _controller: FOSUserBundle:Profile:edit }
     requirements:
         user : \d+
 password_edit:

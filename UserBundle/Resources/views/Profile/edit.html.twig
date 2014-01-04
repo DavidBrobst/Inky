@@ -1,11 +1,14 @@
 {% extends "InkyUserBundle::layout.html.twig" %}
-{% set page_name = 'Edit Profile' %}
+
+{% set page_name = 'user.profile.edit_profile'|trans %}
 {% block title %}{{ parent() }} {{page_name}}{% endblock %}
 {% block pageTitle %}{{page_name}}{%endblock%}
 {% block rootPath %}
-	<li><a href="{{ path('user_profile',{user : user.id})}}" class="divider">{{user.username}}</a></li>
+	<li><a href="{{ path('user_profile',{user : app.user.id})}}" class="divider">{{app.user.username}}</a></li>
 	<li>{{page_name}}</li>
-{% endblock %}
+{% endblock rootPath %}
+
 {% block inky_body %}
-	ici on edite l'utilisateur
+    {{ render(controller('InkyUserBundle:User:ProfileMenu')) }}
+	{% include "FOSUserBundle:Profile:edit_content.html.twig" %}
 {% endblock inky_body %}

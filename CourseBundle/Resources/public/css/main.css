@@ -81,7 +81,7 @@ background-color:#FF9900;
 .navbar-default li.dropdown a:hover{
 color:#fff;
 }
-.dropdown-menu {
+.navbar-default .dropdown-menu {
 margin-top:-1px;
 border:none;
 padding:5px;
@@ -89,21 +89,21 @@ min-width:300px;
 background-color:#FF9900;
 opacity:1.0;
 }
-.dropdown-menu .user-info{
+.navbar-default .dropdown-menu .user-info{
 
 }
 
-.dropdown-menu .user-menu{
+.navbar-default .dropdown-menu .user-menu{
 border-left:1px solid #fff;
 }
-.dropdown-menu .user-menu a{
+.navbar-default .dropdown-menu .user-menu a{
 text-decoration:none;
 display:block;
 width:100%;
 padding:5px 5px 5px 15px;
 }
-.dropdown-menu .user-menu a:hover {
-background-color:black;
+.navbar-default .dropdown-menu .user-menu a:hover {
+background-color:#FF9900;
 }
 
 /* NavBar collapse and  resize bug fix
@@ -146,8 +146,8 @@ padding:0;
 overflow:hidden;
 }
 .masonry .item {
-  width:360px;
-  margin:0 20px 15px 0;
+  width:270px;
+  margin-bottom:15px;
   background: white;
   -webkit-box-shadow: 0 2px 3px rgba(0,0,0,0.3);
   -moz-box-shadow: 0 2px 3px rgba(0,0,0,0.3);
@@ -172,7 +172,30 @@ width: 100%;
 margin:0;
 border: 0;
 }
+/* Profile & Panel */
+.panel-bar.profile{
+margin:0 auto;
+max-width:500px;
+}
+.panel-bar.panel{
+max-width:100%;
+border:none;
+}
+.panel-bar li{
 
+display: block;
+float:left;
+margin-right:5px;
+}
+.panel-bar li a{
+line-height: 20px;
+display: block;
+text-decoration: none;
+padding:5px 4px 5px 4px;
+}
+.panel-bar li a:hover{
+background-color:#f5f5f5;
+}
 /* Lesson */
 #lesson-menu{
 

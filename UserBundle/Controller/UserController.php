@@ -15,8 +15,16 @@ class UserController extends Controller
 	}
 	public function profileAction(User $user)
 	{
+		$point = $this->container->get('inky_user.point');
+		$point->addPoint($user,5);
+		
 		return $this->render('InkyUserBundle:Profile:show.html.twig', array('user'=>$user )
 								);
+	}
+	public function ProfileMenuAction()
+	{
+		return $this->render('InkyUserBundle:Profile:menu.html.twig')
+								;
 	}
 	public function profileEditAction()
 	{
@@ -31,6 +39,11 @@ class UserController extends Controller
 	public function panelAction()
 	{
 		return $this->render('InkyUserBundle:Panel:panel.html.twig')
+								;
+	}
+	public function PanelMenuAction()
+	{
+		return $this->render('InkyUserBundle:Panel:menu.html.twig')
 								;
 	}
 	public function progressAction()
