@@ -22,13 +22,6 @@ class Point
     private $id;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="point", type="integer")
-     */
-    private $point;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
@@ -40,6 +33,12 @@ class Point
 	* @ORM\JoinColumn(nullable=false)
 	*/
      private $user;
+	
+    /**
+	* @ORM\ManyToOne(targetEntity="Inky\UserBundle\Entity\PointAction")
+	* @ORM\JoinColumn(nullable=false)
+	*/
+    private $action;
 	
 	public function __construct()
     {
@@ -54,29 +53,6 @@ class Point
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set point
-     *
-     * @param integer $point
-     * @return Point
-     */
-    public function setPoint($point)
-    {
-        $this->point = $point;
-    
-        return $this;
-    }
-
-    /**
-     * Get point
-     *
-     * @return integer 
-     */
-    public function getPoint()
-    {
-        return $this->point;
     }
 
     /**
@@ -123,5 +99,28 @@ class Point
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set action
+     *
+     * @param \Inky\UserBundle\Entity\PointAction $action
+     * @return Point
+     */
+    public function setAction(\Inky\UserBundle\Entity\PointAction $action)
+    {
+        $this->action = $action;
+    
+        return $this;
+    }
+
+    /**
+     * Get action
+     *
+     * @return \Inky\UserBundle\Entity\PointAction 
+     */
+    public function getAction()
+    {
+        return $this->action;
     }
 }

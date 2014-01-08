@@ -12,17 +12,32 @@ use Doctrine\ORM\EntityRepository;
  */
 class CourseRepository extends EntityRepository
 {
-	public function getCourses($filter)
+	public function getCourses($filter,$userId)
 	{
-		if ($filter === null) 
+		if ($filter === 'learn') 
 		{
-		
 		$query = $this->createQueryBuilder('c')
 		->leftJoin('c.image', 'i')
 			->addSelect('i')
 		->leftJoin('c.tags', 'tags')
 			->addSelect('tags')
 		->where('c.isPublic = 1')
+		->andwhere('c.user != '.$userId)
+		->orderBy('c.date', 'DESC')
+		->getQuery()
+		->getResult();
+		
+		return $query;
+		}
+		elseif ($filter === 'teach') 
+		{
+		$query = $this->createQueryBuilder('c')
+		->leftJoin('c.image', 'i')
+			->addSelect('i')
+		->leftJoin('c.tags', 'tags')
+			->addSelect('tags')
+		->where('c.isPublic = 1')
+		->andwhere('c.user = '.$userId)
 		->orderBy('c.date', 'DESC')
 		->getQuery()
 		->getResult();
@@ -34,7 +49,7 @@ class CourseRepository extends EntityRepository
 	public function searchCourse($search)
 	{
 		$query = $this	->createQueryBuilder('c')
-						->select('DISTINCT c')
+							->select('DISTINCT c')
 						->leftJoin('c.tags', 'tags')
 							->addSelect('tags');
 		$result = $query->where($query->expr()->ORx(	$query->expr()->LIKE('tags.tagLabel', ':search'),

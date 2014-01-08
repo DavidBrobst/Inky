@@ -1,15 +1,15 @@
 {% extends "::layout.html.twig" %}
 
-{% block title %}{{ parent() }}{{ 'course.shouwCourses.course_list' | trans }}{% endblock %}
+{% block title %}{{ parent() }}{{ 'course.showCourses.course_list' | trans }}{% endblock %}
 {% block ownStyle %}
 <style type="text/css">
 body{
-background-image: -ms-linear-gradient(bottom, #FFFFFF 0%, #00A3EF 100%);
-background-image: -moz-linear-gradient(bottom, #FFFFFF 0%, #00A3EF 100%);
-background-image: -o-linear-gradient(bottom, #FFFFFF 0%, #00A3EF 100%);
-background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #FFFFFF), color-stop(1, #00A3EF));
-background-image: -webkit-linear-gradient(bottom, #FFFFFF 0%, #00A3EF 100%);
-background-image: linear-gradient(to top, #FFFFFF 0%, #00A3EF 100%);
+background-image: -ms-linear-gradient(bottom, #FFFFFF 0%, {{bgColor}} 100%);
+background-image: -moz-linear-gradient(bottom, #FFFFFF 0%, {{bgColor}} 100%);
+background-image: -o-linear-gradient(bottom, #FFFFFF 0%, {{bgColor}} 100%);
+background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #FFFFFF), color-stop(1, {{bgColor}}));
+background-image: -webkit-linear-gradient(bottom, #FFFFFF 0%, {{bgColor}} 100%);
+background-image: linear-gradient(to top, #FFFFFF 0%, {{bgColor}} 100%);
 }
 .inky-template {
   border:none;
@@ -26,9 +26,9 @@ display:none;
 {% block inky_body %}
 <div class="courses-search-box" style="width:100%;padding:15px;">
     <div class="input-group input-group-lg inner-courses-search-box" style="margin:auto;">
-		<input type="text" class="form-control"  placeholder="{{'search'|trans}}">
+		<input type="text" class="form-control" id="search_input" placeholder="{{'search'|trans}}">
 		<div class="input-group-btn">
-			<button type="button" class="btn btn-default" tabindex="-1"><span class="glyphicon glyphicon-search"></span></button>
+			<button type="button" class="btn btn-default" id="go_search" tabindex="-1"><span class="glyphicon glyphicon-search"></span></button>
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
 				<span class="glyphicon glyphicon-filter"></span>
 				<span class="sr-only">Toggle Dropdown</span>
@@ -50,7 +50,9 @@ display:none;
 <div style="width:100%;margin-bottom:15px;">
 </div>
 	<div style="clear:both;"></div>
+{% if courseList|length > 0 %}
 <div class="masonry js-masonry"  data-masonry-options='{"isFitWidth": true, "gutter": 12}'>
+
 	{% for course in courseList %}
 	<div class="item">
 		{% if course.image%}
@@ -75,8 +77,20 @@ display:none;
 		</div>
 		<div class="clearfix"></div>
 	</div>
+	
 	{% endfor %}
-</div>	
-
+</div>
+{% else %}
+<div class="no-result" style="">
+{{ 'course.showCourses.nothing_here' | trans }}
+</div>
+{% endif %}
 {% endblock %}
-
+{% block moreJs %}
+	
+<script type="text/javascript">
+$( "#go_search" ).click(function() {
+  if($('#search_input').val()){window.location.replace( "{{ path('general_search') }}/"+$('#search_input').val() );}
+});
+</script>
+{% endblock %}

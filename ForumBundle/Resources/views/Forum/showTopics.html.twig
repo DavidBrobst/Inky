@@ -1,0 +1,10 @@
+Topics
+<ul>
+  {% for topic in topics %}
+	  <li>
+	    <a href="{{ path("inky_forum_thread", {threadId: thread.id}) }}">
+	    	{{ topic.title }}
+	    </a>
+	  </li>
+  {% endfor %}
+</ul>

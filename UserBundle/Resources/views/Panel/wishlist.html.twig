@@ -8,5 +8,15 @@
 	<li>{{page_name}}</li>
 {% endblock %}
 {% block inky_body %}
-	When you see a lesson that you like you can add it here. You first need to learn the requirement for this lesson and then you can come back here.
+{{ render(controller('InkyUserBundle:User:PanelMenu')) }}
+	When you see a lesson that you like you can add it here. You first need to learn the requirement for this lesson and then you can come back here.<br/>
+	
+	{% if courseLength>0 %}
+		{% for c in courseList %}
+			{{c.course.id}}<br/>
+		{% endfor %}
+	{% else %}
+		Nothing found
+	{% endif %}
+	
 {% endblock inky_body %}

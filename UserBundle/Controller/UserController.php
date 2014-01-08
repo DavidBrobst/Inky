@@ -1,6 +1,10 @@
 <?php
 namespace Inky\UserBundle\Controller;
 
+/* User Info Charts*/
+use Ob\HighchartsBundle\Highcharts\Highchart;
+use Zend\Json\Expr;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 
@@ -48,8 +52,81 @@ class UserController extends Controller
 	}
 	public function progressAction()
 	{
-		return $this->render('InkyUserBundle:Panel:progress.html.twig')
-								;
+		// Points
+		$point = $this->container->get('inky_user.point');
+		$pointInfo = $point->showPoint($this->getUser());
+			// Need of month and points for each month
+		$month = array();
+		$monthlyPoint = array();
+		$cumulativePoint = array();
+
+		// for example
+		foreach ($pointInfo as $pointInf) {
+			$month[] = $pointInf['month'];
+			$monthlyPoint[] = intval($pointInf['avgPoint']);
+			$cumulativePoint[] = array_sum($monthlyPoint);
+		}
+		// Chart
+        $series = array(
+					array(
+						'name'  => 'Monthly Points',
+						'type'  => 'column',
+						'color' => '#4572A7',
+						'yAxis' => 1,
+						'data'  => $monthlyPoint,
+					),
+					array(
+						'name'  => 'Cummulative Points',
+						'type'  => 'spline',
+						'color' => '#AA4643',
+						'data'  => $cumulativePoint,
+					),
+				);
+				$yData = array(
+					array(
+						'labels' => array(
+							'formatter' => new Expr('function () { return this.value + " point" }'),
+							'style'     => array('color' => '#AA4643')
+						),
+						'title' => array(
+							'text'  => 'Cummulative Points',
+							'style' => array('color' => '#AA4643')
+						),
+						
+					),
+					array(
+						'labels' => array(
+							'formatter' => new Expr('function () { return this.value + " point" }'),
+							'style'     => array('color' => '#4572A7')
+						),
+						'gridLineWidth' => 0,
+						'title' => array(
+							'text'  => 'Monthly Points',
+							'style' => array('color' => '#4572A7')
+						),
+						'opposite' => true,
+					),
+				);
+				$categories = $month;
+
+				$ob = new Highchart();
+				$ob->chart->renderTo('linechart'); // The #id of the div where to render the chart
+				$ob->chart->type('column');
+				$ob->title->text('Point evolution');
+				$ob->xAxis->categories($categories);
+				$ob->yAxis($yData);
+				$ob->legend->enabled(false);
+				$formatter = new Expr('function () {
+								 var unit = {
+									 "Monthly Points": "points",
+									 "Cummulative Points": "points",
+								 }[this.series.name];
+								 return this.x + ": <b>" + this.y + "</b> " + unit;
+							 }');
+				$ob->tooltip->formatter($formatter);
+				$ob->series($series);
+		
+		return $this->render('InkyUserBundle:Panel:progress.html.twig', array('pointInfo'=>$pointInfo,'chart'=>$ob))	;
 	}
 	public function gradesAction()
 	{
@@ -68,8 +145,13 @@ class UserController extends Controller
 	}
 	public function wishListAction()
 	{
-		return $this->render('InkyUserBundle:Panel:wishlist.html.twig')
-								;
+		$courseList = $this	->getDoctrine()->getManager()->getRepository('InkyUserBundle:Wishlist')
+							->getCourses($this->getUser()->getId());
+								
+		return $this->render('InkyUserBundle:Panel:wishlist.html.twig',
+								array(	'courseList' => $courseList,
+										'courseLength' => count($courseList))
+							);
 	}
 	public function joinGroupAction()
 	{

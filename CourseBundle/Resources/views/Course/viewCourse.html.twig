@@ -93,6 +93,9 @@ margin-right:10px;
 			</a>
 		{% endif %}
 		<a class="" href="#"><span class="glyphicon glyphicon-comment"></span>{{'Forum' | trans }}</a>
+		<a class="" href="{{ path('course_subscribe', {'course': course.id}) }}"><span class="glyphicon glyphicon-heart-empty"></span>
+			{{'course.viewCourse.add_wishlist' | trans }}
+		</a>
 		<a class="" href="{{ path('course_subscribe', {'course': course.id}) }}">
 			<span class="glyphicon glyphicon-share-alt"></span>
 			{{'course.viewCourse.take_course' | trans }}

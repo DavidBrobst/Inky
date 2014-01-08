@@ -95,6 +95,11 @@ class Course
 	 * @ORM\OneToMany(targetEntity="Inky\CourseBundle\Entity\Lesson\Lesson", cascade={"persist", "remove"}, mappedBy="course")
 	 */
 	private $lesson;
+
+	/**
+	 * @ORM\OneToMany(targetEntity="Inky\UserBundle\Entity\Wishlist", cascade={"persist", "remove"}, mappedBy="course")
+	 */
+	private $wishlist;
 	
 	/**
 	* @ORM\ManyToOne(targetEntity="Inky\UserBundle\Entity\User")
@@ -456,5 +461,38 @@ class Course
     public function getPrerequisite()
     {
         return $this->prerequisite;
+    }
+
+    /**
+     * Add wishlist
+     *
+     * @param \Inky\UserBundle\Entity\Wishlist $wishlist
+     * @return Course
+     */
+    public function addWishlist(\Inky\UserBundle\Entity\Wishlist $wishlist)
+    {
+        $this->wishlist[] = $wishlist;
+    
+        return $this;
+    }
+
+    /**
+     * Remove wishlist
+     *
+     * @param \Inky\UserBundle\Entity\Wishlist $wishlist
+     */
+    public function removeWishlist(\Inky\UserBundle\Entity\Wishlist $wishlist)
+    {
+        $this->wishlist->removeElement($wishlist);
+    }
+
+    /**
+     * Get wishlist
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getWishlist()
+    {
+        return $this->wishlist;
     }
 }

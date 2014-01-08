@@ -10,8 +10,13 @@ course_view:
     course:   \d+
 
 courses_list:
-  pattern: /Courses/All
+  pattern: /Learn
   defaults: { _controller: InkyCourseBundle:Course:showCourses}
+  requirements:
+    page:   \d+
+created_courses_list:
+  pattern: /Teach
+  defaults: { _controller: InkyCourseBundle:Course:showCreatedCourses}
   requirements:
     page:   \d+
 
@@ -150,4 +155,4 @@ inky_chap_statistics:
 #Search Routing
 general_search:
     pattern: /search/{search}
-    defaults: {_controller: InkyCourseBundle:Course:generalSearch}
+    defaults: {_controller: InkyCourseBundle:Course:generalSearch, search:null }

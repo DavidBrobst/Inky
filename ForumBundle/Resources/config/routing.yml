@@ -1,0 +1,33 @@
+inky_forum_boards:
+    pattern:  /boards
+    defaults: { _controller: InkyForumBundle:Forum:showBoards }
+
+inky_forum_newBoard:
+    pattern:  /new-board
+    defaults: { _controller: InkyForumBundle:Forum:newBoard }
+
+inky_forum_topics:
+    pattern:  /{board}/topics
+    defaults: { _controller: InkyForumBundle:Forum:showTopics }
+    requirements:
+        board : \d+
+inky_forum_newTopic:
+    pattern:  /{board}/new-topic
+    defaults: { _controller: InkyForumBundle:Forum:newTopic }
+    requirements:
+        board : \d+
+inky_forum_threads:
+    pattern:  /{topic}/threads
+    defaults: { _controller: InkyForumBundle:Forum:showThreads }
+    requirements:
+        topic : \d+
+inky_forum_newThread:
+    pattern:  /{topic}/new-thread
+    defaults: { _controller: InkyForumBundle:Forum:newThread }
+    requirements:
+        topic : \d+
+inky_forum_thread:
+    pattern:  /thread/{thread}
+    defaults: { _controller: InkyForumBundle:Forum:showThread }
+    requirements:
+        topic : \d+

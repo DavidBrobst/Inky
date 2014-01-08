@@ -3,6 +3,7 @@
 namespace Inky\UserBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Inky\UserBundle\Entity\User as User;
 
 /**
  * PointRepository
@@ -12,4 +13,23 @@ use Doctrine\ORM\EntityRepository;
  */
 class PointRepository extends EntityRepository
 {
+	public function getUserPoint(User $user)
+	{
+		// $user = $user->getId();
+		
+		$query = $this	->createQueryBuilder('p')
+							->addselect('SUBSTRING(p.date, 6, 2) as month')
+							
+						->leftJoin('p.action', 'a')
+							->addSelect('a')
+							->addSelect('SUM(a.point) as avgPoint')
+						->where('p.user = '.$user->getId())
+						->orderBy('p.date', 'ASC')
+						->groupBy('month')
+						->getQuery()
+						->getResult();
+
+		return $query;
+
+	}
 }

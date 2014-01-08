@@ -18,6 +18,7 @@ use Inky\CourseBundle\Entity\Course\Subscribe;
 use Inky\CourseBundle\Form\CourseType;
 use Inky\CourseBundle\Form\CourseEditType;
 use Inky\CourseBundle\Form\ImageType;
+
 // Chapter
 use Inky\CourseBundle\Entity\InkyChap\InkyChapAdvancement;
 
@@ -40,11 +41,25 @@ class CourseController extends Controller
 		$courseList = $this	->getDoctrine()
 								->getManager()
 								->getRepository('InkyCourseBundle:Course\Course')
-								->getCourses(null);
+								->getCourses('learn',$this->getUser()->getId());
 								
 		return $this->render(	'InkyCourseBundle:Course:showCourses.html.twig',
 								array(	'courseList' => $courseList,
+										'bgColor' => '#00A3EF',
 										
+								)
+							);
+	}
+	public function showCreatedCoursesAction()
+	{
+		$courseList = $this	->getDoctrine()
+								->getManager()
+								->getRepository('InkyCourseBundle:Course\Course')
+								->getCourses('teach',$this->getUser()->getId());
+								
+		return $this->render(	'InkyCourseBundle:Course:showCourses.html.twig',
+								array(	'courseList' => $courseList,
+										'bgColor' => '#84A823',
 								)
 							);
 	}
@@ -129,8 +144,7 @@ class CourseController extends Controller
 	public function addCourseAction()
 	{
 		$new_course = new Course;
-
-		if ($this->getUser()) { $new_course->setUser($this->getUser());}
+		$new_course->setUser($this->getUser());
 		
 		$form = $this->createForm(new CourseType(), $new_course);
 		$request = $this->getRequest();
@@ -150,6 +164,7 @@ class CourseController extends Controller
 				  $em->persist($tag);
 				}
 				$em->flush();
+				
 				// creating the ACL
 				$aclProvider = $this->get('security.acl.provider');
 				$objectIdentity = ObjectIdentity::fromDomainObject($new_course);
@@ -307,20 +322,13 @@ class CourseController extends Controller
     {
 		if ($search)
 		{
-			$search_result = $this	->getDoctrine()
-								->getManager()
-								->getRepository('InkyCourseBundle:COurse')
+			$search_result = $this->getDoctrine()->getManager()->getRepository('InkyCourseBundle:Course\Course')
 								->searchCourse($search);
-			
-			if(count($search_result)>=1)
-			{				
-				return $this->render(	'InkyCourseBundle:Course:generalSearch.html.twig', 
-										array(	'issetResult' => $search_result,												
+							
+				return $this->render(	'InkyCourseBundle:Course:showCourses.html.twig', 
+										array(	'courseList' => $search_result,
+												'bgColor' => '#00A3EF',
 												)
-									);
-			}
-			return $this->render(	'InkyCourseBundle:Course:generalSearch.html.twig', 
-										array('issetResult' => null )
 									);
 		}
 	}

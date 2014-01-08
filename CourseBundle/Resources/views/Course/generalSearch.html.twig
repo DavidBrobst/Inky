@@ -4,7 +4,6 @@
 {% block pageTitle %}{{'course.generalSearch.search' | trans }}{%endblock%}
 {% block rootPath %}
 	<li><a href="{{ path('courses_list')}}" class="divider">{{'course' | trans }}</a></li>
-	<li><a href="{{ path('course_view', {'course': course.id}) }}" class="divider">{{'course.generalSearch.search' | trans }}</a></li>
 {% endblock %}
 
 {% block inky_body %}
