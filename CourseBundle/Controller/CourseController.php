@@ -21,6 +21,7 @@ use Inky\CourseBundle\Form\ImageType;
 
 // Chapter
 use Inky\CourseBundle\Entity\InkyChap\InkyChapAdvancement;
+use Inky\CourseBundle\Entity\InkyChap\InkyChap;
 
 // Group
 use Inky\UserBundle\Entity\Group;
@@ -35,59 +36,87 @@ class CourseController extends Controller
         return $this->render('InkyCourseBundle:Course:index.html.twig');
     }
 	
-	// Course
-	public function showCoursesAction()
+	
+	// 1. You start by looking at courses //
+	
+	// List of courses available
+	public function showCoursesAction($section)
 	{
-		$courseList = $this	->getDoctrine()
-								->getManager()
-								->getRepository('InkyCourseBundle:Course\Course')
-								->getCourses('learn',$this->getUser()->getId());
+		if($section == 'learn' ){ $bgColor = '#00A3EF'; $section = 'learn'; }
+		else {$bgColor = '#84A823'; $section = 'teach';}
+			
+		$request = $this->getRequest();	
+		$em = $this->getDoctrine()->getManager();
+
+		$userId = $this->getUser()->getId();
+		
+		// nb Courses Per Page
+		$nbCoursePerPage = 30;
+		$totalNbCourses = $em->getRepository('InkyCourseBundle:Course\Course')->countCourses($section,$userId);
+		
+		if($request->isXmlHttpRequest()) 
+		{
+			$courseStart = $request->request->get('CourseStart');
+			$courseList   = $em -> getRepository('InkyCourseBundle:Course\Course')->getCourses($section,$userId,$nbCoursePerPage,$courseStart);
+			
+			return $this->render(	'InkyCourseBundle:Course:showCoursesContent.html.twig',
+									array('courseList'=>$courseList)
+								);
+		}
+		
+		$courseList = $em	->getRepository('InkyCourseBundle:Course\Course')
+							->getCourses($section,$userId,$nbCoursePerPage);
 								
 		return $this->render(	'InkyCourseBundle:Course:showCourses.html.twig',
 								array(	'courseList' => $courseList,
-										'bgColor' => '#00A3EF',
+										'bgColor' => $bgColor,
+										'section' => $section,
+										'totalNbCourses'=>$totalNbCourses,
+										'nbCoursePerPage'=>$nbCoursePerPage
+										
 										
 								)
 							);
 	}
-	public function showCreatedCoursesAction()
-	{
-		$courseList = $this	->getDoctrine()
-								->getManager()
-								->getRepository('InkyCourseBundle:Course\Course')
-								->getCourses('teach',$this->getUser()->getId());
-								
-		return $this->render(	'InkyCourseBundle:Course:showCourses.html.twig',
-								array(	'courseList' => $courseList,
-										'bgColor' => '#84A823',
-								)
-							);
-	}
-	// Course Administration
-	public function adminCourseAction(Course $course)
-	{
-		$em = $this	->getDoctrine()->getManager();
-		$request = $this->getRequest();
 		
-		if($request->isXmlHttpRequest()) 
+	// You don't find what you are looking first? Give it a search
+	public function generalSearchAction($search)
+    {
+		if ($search)
 		{
-			$lessonId= $request->request->get('lessonId');
-			$InkyChap = $em -> getRepository('InkyCourseBundle:InkyChap\InkyChap')->findByLesson($lessonId);
-			
-			return $this->render(	'InkyCourseBundle:InkyChap:InkyChapDetail.html.twig',
-									array('InkyChap'=>$InkyChap));
+			$search_result = $this->getDoctrine()->getManager()->getRepository('InkyCourseBundle:Course\Course')
+								->searchCourse($search);
+							
+				return $this->render(	'InkyCourseBundle:Course:showCourses.html.twig', 
+										array(	'courseList' => $search_result,
+												'bgColor' => '#00A3EF',
+												)
+									);
 		}
+	}
+
+	
+	// 2. Then you look at the course overview //
+	
+	// View Course Presentaton
+	public function viewCourseAction(Course $course)
+	{
+		$em = $this->getDoctrine()->getManager();
 		
-		$lessonList = $em->getRepository('InkyCourseBundle:Lesson\Lesson')->findByCourse($course);
-								
-		return $this->render(	'InkyCourseBundle:Course:adminCourse.html.twig',
+		$repository = $em->getRepository('InkyCourseBundle:Lesson\Lesson');
+		// If user not logged, error !
+		if ($this->getUser()){$lessonList = $repository->getLessons($course->getId(), $this->getUser());}
+		else {$lessonList = $repository->getLessons($course->getId());}
+		
+		return $this->render(	'InkyCourseBundle:Course:viewCourse.html.twig',
 								array(	'course' => $course,
-										'lessons' => $lessonList
+										'lessonList' => $lessonList,
 								)
 							);
 	}
 	
 	// Subscribe course
+	// Problem, the user needs to be logged in to to this
 	public function subscribeCourseAction(Course $course)
 	{
 		$em = $this->getDoctrine()->getManager();
@@ -124,21 +153,55 @@ class CourseController extends Controller
 								);
 	}
 	
-	// View Course
-	public function viewCourseAction(Course $course)
+	// Unsubscribe from course
+	public function unsubscribeAction(Course $course)
+    {
+		if($this->getUser())
+		{
+			$em = $this->getDoctrine()->getManager();
+			$subscribe = $em->getRepository('InkyCourseBundle:Course\Subscribe')->	findBy(array('user' => $this->getUser(),
+																								 'course' => $course->getId()
+																							)
+																				);
+			if(count($subscribe)>0)
+			{
+				$em->remove($subscribe);
+				$em->flush($subscribe);
+				$this->get('session')->getFlashBag()->add('success', 'unsubscribed_course');
+			}
+			else{
+				$this->get('session')->getFlashBag()->add('info', 'never_subscribed');
+			}
+		}
+		else
+		{
+			$this->get('session')->getFlashBag()->add('error', 'login_to_unsubscribe');
+		}
+		return $this->redirect	($this->generateUrl	('course_view', array(	'course' => $course->getId() )));
+	}
+	
+	// Course Content
+	public function viewCourseContentAction(Course $course)
 	{
-		$em = $this->getDoctrine()->getManager();
 		
-		$repository = $em->getRepository('InkyCourseBundle:Lesson\Lesson');
-		if ($this->getUser()){$lessonList = $repository->getLessons($course->getId(), $this->getUser());}
-		else {$lessonList = $repository->getLessons($course->getId());}
-		
-		return $this->render(	'InkyCourseBundle:Course:viewCourse.html.twig',
+		return $this->render(	'InkyCourseBundle:Course:takeCourse.html.twig',
 								array(	'course' => $course,
-										'lessonList' => $lessonList,
+								)
+							);
+
+	}
+
+	public function viewAltCourseContentAction(Course $course, InkyChap $inkychap)
+	{
+		return $this->render(	'InkyCourseBundle:Course:takeCourse.html.twig',
+								array(	'course' => $course,
+										'inkyChap' => $inkychap
 								)
 							);
 	}
+	
+	
+	// 3. Then you create a course OR if you are the creator of the course you manage it //
 	
 	// AddCourse
 	public function addCourseAction()
@@ -179,7 +242,7 @@ class CourseController extends Controller
 				$acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
 				$aclProvider->updateAcl($acl);
 				
-				$this->get('session')->getFlashBag()->add('lessonInfo', 'Votre cours a bien ete ajoute');
+				$this->get('session')->getFlashBag()->add('success', 'Votre cours a bien ete ajoute');
 				return $this->redirect($this->generateUrl('lesson_new', array('courseId' => $new_course->getId())));
 			}
 		}
@@ -241,6 +304,30 @@ class CourseController extends Controller
 								)
 							);
 	}
+
+	// Course Administration
+	public function adminCourseAction(Course $course)
+	{
+		$em = $this	->getDoctrine()->getManager();
+		$request = $this->getRequest();
+		
+		if($request->isXmlHttpRequest()) 
+		{
+			$lessonId= $request->request->get('lessonId');
+			$InkyChap = $em -> getRepository('InkyCourseBundle:InkyChap\InkyChap')->findByLesson($lessonId);
+			
+			return $this->render(	'InkyCourseBundle:InkyChap:InkyChapDetail.html.twig',
+									array('InkyChap'=>$InkyChap));
+		}
+		
+		$lessonList = $em->getRepository('InkyCourseBundle:Lesson\Lesson')->findByCourse($course);
+								
+		return $this->render(	'InkyCourseBundle:Course:adminCourse.html.twig',
+								array(	'course' => $course,
+										'lessons' => $lessonList
+								)
+							);
+	}
 	
 	// Group
     public function viewGroupAction(Course $course)
@@ -293,6 +380,7 @@ class CourseController extends Controller
 		return $this->render('InkyCourseBundle:Course:addGroup.html.twig', array('form' => $form->createView(), 'course'=>$course));
     }
 
+	// Edit Group
     public function editGroupAction(Group $group)
     {
 		$form = $this->createForm(new GroupEditType(), $group, array('roles' => $this->container->getParameter('security.role_hierarchy.roles')));
@@ -318,25 +406,7 @@ class CourseController extends Controller
 							);
 	}
 	
-	public function generalSearchAction($search)
-    {
-		if ($search)
-		{
-			$search_result = $this->getDoctrine()->getManager()->getRepository('InkyCourseBundle:Course\Course')
-								->searchCourse($search);
-							
-				return $this->render(	'InkyCourseBundle:Course:showCourses.html.twig', 
-										array(	'courseList' => $search_result,
-												'bgColor' => '#00A3EF',
-												)
-									);
-		}
-	}
-	public function unsubscribeAction($id)
-    {
-	
-	}
-    
+	// Look at the course progression, its stats, enrollment ...
     public function progressAction()
     {
 	}

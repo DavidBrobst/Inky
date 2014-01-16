@@ -12,38 +12,45 @@ use Doctrine\ORM\EntityRepository;
  */
 class CourseRepository extends EntityRepository
 {
-	public function getCourses($filter,$userId)
+	public function getCourses($filter, $userId, $nbCourse, $fromCourse = 0)
 	{
+		// We select courses
+		$query = $this->createQueryBuilder('c');
+		
+		// Learn Filter, different User / Public Status
 		if ($filter === 'learn') 
-		{
-		$query = $this->createQueryBuilder('c')
-		->leftJoin('c.image', 'i')
-			->addSelect('i')
-		->leftJoin('c.tags', 'tags')
-			->addSelect('tags')
-		->where('c.isPublic = 1')
-		->andwhere('c.user != '.$userId)
-		->orderBy('c.date', 'DESC')
-		->getQuery()
-		->getResult();
-		
-		return $query;
-		}
+			$query = $query	->where('c.isPublic = 1')->andwhere('c.user != '.$userId);
+
+		// Teach Filter, Same User 
+		// needs differentiation on the rendered page, non public should be higlighted
 		elseif ($filter === 'teach') 
-		{
-		$query = $this->createQueryBuilder('c')
-		->leftJoin('c.image', 'i')
-			->addSelect('i')
-		->leftJoin('c.tags', 'tags')
-			->addSelect('tags')
-		->where('c.isPublic = 1')
-		->andwhere('c.user = '.$userId)
-		->orderBy('c.date', 'DESC')
-		->getQuery()
-		->getResult();
-		
+			$query = $query ->where('c.user = '.$userId);
+
+		// End of Query
+		$query = $query	->orderBy('c.date', 'DESC')
+						->setMaxResults( $nbCourse )
+						->setFirstResult( $fromCourse )
+
+						->getQuery()
+						->getResult();
+				
 		return $query;
-		}
+	}
+	
+	public function countCourses($filter, $userId)
+	{
+		$query = $this	->createQueryBuilder('c')
+						->select('count(c.id)');
+						
+		if ($filter === 'learn') 
+			$query = $query	->where('c.isPublic = 1')->andwhere('c.user != '.$userId);
+		
+		elseif ($filter === 'teach') 
+			$query = $query ->where('c.user = '.$userId);
+		
+		$query = $query	->getQuery()
+						->getSingleScalarResult();
+		return $query;
 	}
 	
 	public function searchCourse($search)

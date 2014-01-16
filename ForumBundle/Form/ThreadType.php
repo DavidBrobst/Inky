@@ -16,7 +16,8 @@ class ThreadType extends AbstractType
     {
         $builder
             ->add('title')
-			->add('message', 'collection', array(	'type' => new messageType, 
+			->add('message', 'collection', array(	'type' => new messageType,
+													'label' => false,
 													'allow_add' => false,
 													'allow_delete' => false )
 				)

@@ -1,5 +1,89 @@
-<ul>
-  {% for message in messages %}
-    <li>{{ message.body }}</li>
-  {% endfor %}
-</ul>
+{% extends "InkyForumBundle::layout.html.twig" %}
+
+{% set page_name = topic.title %}
+{% block title %}{{ parent() }} {{page_name}}{% endblock %}
+{% block pageTitle %}{{page_name}}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('inky_forum_boards')}}" class="divider">{{'forum.topic.boards'|trans}}</a></li>
+	<li><a href="{{ path('inky_forum_topics',{'board':topic.board.id})}}" class="divider">{{topic.board.title}}</a></li>
+	<li><a href="{{ path('inky_forum_threads',{'topic':topic.id})}}" class="divider">{{topic.title}}</a></li>
+{% endblock %}
+
+
+
+
+
+{% block inky_body %}
+	
+	<a class="btn btn-danger" rel="nofollow" href="{{ path('inky_forum_newThread',{'topic':topic.id}) }}">
+		<i class="glyphicon glyphicon-plus"></i> {{'forum.threads.create_thread'|trans}}
+	</a>
+	<hr>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th class="center" style="width:32px;">
+					&nbsp;
+				</th>
+				<th class="left">
+					{{'forum.topic.thread'|trans}}
+				</th>
+				<th class="center" style="width:60px;">
+					{{'forum.topic.replies'|trans}}
+				</th>
+				<th class="center" style="width:60px;">
+					{{'forum.topic.views'|trans}}
+				</th>
+				<th class="center" style="width:60px;">
+					{{'forum.topic.vote'|trans}}
+				</th>
+				<th class="center" style="width:170px;">
+					{{'forum.topic.last'|trans}}
+				</th>
+			</tr>
+		</thead>
+		<tbody id="threadList" >
+			{% include 'InkyForumBundle:Forum:showThreadContent.html.twig' %}	
+		</tbody>
+	</table>
+	<input id="threadStart" value="{{nbThread}}" readonly style="visibility:hidden"/>
+	{% if nbThread < totalNbThread %}
+	<div id="fetcherContainer" class="progress">
+		<div class="progress-bar progress-bar-warning"  role="progressbar" aria-valuenow="100"  aria-valuemin="0" aria-valuemax="100" style="width: 100%" id="fetch" >
+			<button class="" id="fetch" type="button">{{'forum.threads.load_more'|trans}}</button>
+		</div>
+	</div>
+	{% endif %}
+{% endblock inky_body %}
+
+{% block javascripts %}{{ parent() }}
+{% if nbThread < totalNbThread %}
+<script type="text/javascript">
+
+$(document).ready(function() {
+var $prototype = $('#threadList');
+$('button#fetch').click(function(e) {
+    var threadStart = parseInt($('#threadStart').val());
+    $('#fetcherContainer').addClass('progress-striped active');
+			$.ajax({
+                type: 'POST',
+                data: {'ThreadStart' : threadStart},          
+                url:  '{{ path("inky_forum_threads", {topic:topic.id}) }}',      
+                success: function(response) {
+                  $prototype.append(response);
+				  $('#fetcherContainer').removeClass('progress-striped active');
+				  threadStart = parseInt(threadStart+{{nbThread}});
+				  $('#threadStart').val(threadStart);
+				  if( parseInt(threadStart) >= parseInt({{totalNbThread}}) ){ $('#fetcherContainer').css("display","none"); }
+				  
+               },
+			  error: function (xhr, ajaxOptions, thrownError) {
+				alert(thrownError);
+			  }
+			  
+            });
+});
+});
+</script>
+{% endif %}
+{% endblock javascripts %}

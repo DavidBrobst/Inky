@@ -16,17 +16,26 @@ use Inky\CourseBundle\Form\InkyChap\InkyVideoType;
 
 class InkyChapController extends Controller
 {
-	public function viewInkyChapAction(Lesson $lesson, InkyChap $inkychap)
+	public function renderInkyChapAction(InkyChap $inkychap)
+	{
+		// Return the course page and InkyChap loaded
+		return $inkychap->getTitle();
+	}
+	public function viewInkyChapAction(InkyChap $inkychap)
 	{
 		
 		$em = $this->getDoctrine()->getManager();
+		$lesson = $inkychap->getLesson();
+		
 		// InkyUser's Advancemnt
 		$repository = $em->getRepository('InkyCourseBundle:InkyChap\InkyChapAdvancement');
 		$advancement = $repository->getLessonAdvancement($lesson,$this->getUser());
 		$currentAdv = $repository->findBy(array('inkychap'=>$inkychap, 'user'=>$this->getUser()));
+		
 		// Lesson's InkyChapters
 		$repository = $em->getRepository('InkyCourseBundle:InkyChap\InkyChap');
 		$InkyChapList = $repository->findByLesson($lesson);
+		
 		// We bind the chapter and advancements to see what the InkyUser has and hasn't studied
 		$InkyChapMapOut = array();
 		foreach ($InkyChapList as $InkyCL)
@@ -43,7 +52,8 @@ class InkyChapController extends Controller
 										'inkychap'=> $inkychap
 									);
 		}
-		// If First visit, advancmeent updated
+		
+		// If First visit, advancement updated
 		// The advancement here describes where the user GOT not what he completed
 		if(!$currentAdv)
 		{
@@ -54,8 +64,8 @@ class InkyChapController extends Controller
 			$em->persist($currentAdv);
 			$em->flush();	
 		}
-	// Chapter
-	return $this->render(	'InkyCourseBundle:InkyChap:viewInkyChap.html.twig', 
+		// Chapter
+		return $this->render(	'InkyCourseBundle:InkyChap:viewInkyChap.html.twig', 
 								array(	'lesson' => $lesson,
 										'inkychap'=> $inkychap,
 										'mapout' => $InkyChapMapOut,
@@ -63,6 +73,7 @@ class InkyChapController extends Controller
 								)
 							);
 	}
+	
 	// Render  InkyText
 	public function renderInkyTextAction(InkyChap $inkyChap)
 	{
@@ -79,8 +90,42 @@ class InkyChapController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		$repository = $em->getRepository('InkyCourseBundle:InkyChap\InkyQuiz');
 		$inkyQuiz = $repository->findOneByInkyChap($inkyChap);
-
-		return $this->forward('InkyQuizBundle:Quiz:takeQuiz', array('quiz' => $inkyQuiz->getQuiz() ));
+		
+		function getQuRef($quiz,$em)
+		{
+					
+			// We display question refference in an array with the type of question, its Id (what we need to get it) AND an OrderId to know how to diplay them
+			// ToDo: Add the order thingy in each array created
+			$QuRef = array ();
+			//McQuestion
+			$McQuestionList = $em -> getRepository('InkyQuizBundle:Question\McQuestion')->findByQuiz($quiz);
+			foreach ($McQuestionList as $McQu)
+			{
+				$QuRef[] = array('McQuestion',$McQu->getId());
+			}
+			$InputQuestionList = $em -> getRepository('InkyQuizBundle:Question\InputQuestion')->findByQuiz($quiz);
+			foreach ($InputQuestionList as $InputQu)
+			{
+				$QuRef[] = array('InputQuestion',$InputQu->getId());
+			}
+			$TfQuestionList = $em -> getRepository('InkyQuizBundle:Question\TfQuestion')->findByQuiz($quiz);
+			foreach ($TfQuestionList as $TfQu)
+			{
+				$QuRef[] = array('TfQuestion',$TfQu->getId());
+			}
+			$SubmitQuestionList = $em -> getRepository('InkyQuizBundle:Question\SubmitQuestion')->findByQuiz($quiz);
+			foreach ($SubmitQuestionList as $SubmitQu)
+			{
+				$QuRef[] = array('SubmitQuestion',$McQu->getId());
+			}
+			
+			return $QuRef;
+		}
+		// Once ou Question Refenrence has been populated, all that is left to do is to fetch the question and send the answer to the datababez
+		return $this->render(	'InkyQuizBundle:UserAnswer:takeQuiz.html.twig',array(	'quiz' => $inkyQuiz,
+																						'QuRef' => getQuRef($inkyQuiz,$em)
+																				)
+							);
 	}
 
 	// Render  InkyVideo
@@ -185,11 +230,13 @@ class InkyChapController extends Controller
 				$InkyChap->setType('InkyVideo');
 				$InkyChap->setLesson($lesson);
 				$InkyChap->setOrderId($orderId);
-				// InkyText
+				
+				// InkyVideo
 				$InkyVideo = new InkyVideo();
 				$InkyVideo->setInkyChap($InkyChap);
 				$InkyVideo->setTitle($form->get('title')->getData());
 				$InkyVideo->setUrl ($video_code);
+				
 				// And send to Datababez
 				$em->persist($InkyChap);
 				$em->persist($InkyVideo);

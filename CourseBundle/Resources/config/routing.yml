@@ -4,48 +4,56 @@ inky_presentation:
   defaults: { _controller: InkyCourseBundle:Course:index }
 
 course_view:
-  pattern: /course/{course}
+  pattern: /course-presentation/{course}
   defaults: { _controller: InkyCourseBundle:Course:viewCourse }
   requirements:
     course:   \d+
 
 courses_list:
-  pattern: /Learn
-  defaults: { _controller: InkyCourseBundle:Course:showCourses}
+  pattern: /courses-{section}
+  defaults: { _controller: InkyCourseBundle:Course:showCourses, section:learn }
   requirements:
-    page:   \d+
-created_courses_list:
-  pattern: /Teach
-  defaults: { _controller: InkyCourseBundle:Course:showCreatedCourses}
-  requirements:
-    page:   \d+
+    section: learn|teach
 
 course_administration:
-  pattern: /course/{course}/admin
+  pattern: /course-{course}/admin
   defaults: { _controller: InkyCourseBundle:Course:adminCourse }
   requirements:
     course:   \d+
 
 course_subscribe:
-  pattern: /course/{course}/subscribe
+  pattern: /course-{course}/subscribe
   defaults: { _controller: InkyCourseBundle:Course:subscribeCourse }
   requirements:
     course:   \d+
 
-course_take:
-  pattern: Course/{course}/{lesson}/{inkychap}
+course_content:
+  pattern: course-{course}/
+  defaults: { _controller: InkyCourseBundle:Course:viewCourseContent }
+  requirements:
+    course:   \d+
+
+alt_course_content:
+  pattern: /course-{course}/inkychap-{inkychap}
+  defaults: { _controller: InkyCourseBundle:Course:viewAltCourseContent }
+  requirements:
+    course:   \d+
+
+course_acess_chap_content:
+  pattern: /inkychap-{inkychap}
   defaults: { _controller: InkyCourseBundle:InkyChap:viewInkyChap }
   requirements:
     course:   \d+
-    lesson:   \d+
-    inkychap:   \d+
+
+inkychap_mock:
+  pattern: /inkychap-
 
 course_new:
   pattern: /course/new
   defaults: { _controller: InkyCourseBundle:Course:addCourse }
 
 course_edit:
-  pattern: /course/{course}/edit
+  pattern: /course-{course}/edit
   defaults: { _controller: InkyCourseBundle:Course:editCourse }
   requirements:
     id:   \d+
@@ -75,16 +83,6 @@ course_delete:
     id:   \d+
 
 #Lesson routing
-lessons_index:
-  pattern: /lessons
-  defaults: { _controller: InkyCourseBundle:Lesson:index, page: 1 }
-
-lessons_list:
-  pattern: /lessons/{page}
-  defaults: { _controller: InkyCourseBundle:Lesson:index, page: 1 }
-  requirements:
-    page:   \d+
-
 lesson_statistics:
   pattern: /lesson/{lesson}/stats
   defaults: { _controller: InkyCourseBundle:Lesson:stats}
@@ -114,16 +112,19 @@ lesson_delete:
   defaults: { _controller: InkyCourseBundle:Lesson:delete }
   requirements:
     lesson:   \d+
+
 lesson_ask:
   pattern: /lesson/{lesson}/ask
   defaults: { _controller: InkyCourseBundle:Lesson:ask }
   requirements:
     id:   \d+
+
 lesson_statistics:
   pattern: /lesson/{lesson}/statistics
   defaults: { _controller: InkyCourseBundle:Lesson:statistics }
   requirements:
     id:   \d+
+
 lesson_documentation:
   pattern: /{lesson}/documentation
   defaults: { _controller: InkyCourseBundle:Lesson:documentation }
@@ -136,16 +137,19 @@ inkychap_add:
   defaults: { _controller: InkyCourseBundle:InkyChap:addInkyChap }
   requirements:
     id:   \d+
+
 inky_video_add:
   pattern: /{lesson}/Video/new
   defaults: { _controller: InkyCourseBundle:InkyChap:addInkyVideo }
   requirements:
     id:   \d+
+
 inky_text_add:
   pattern: /{lesson}/Text/new
   defaults: { _controller: InkyCourseBundle:InkyChap:addInkyText }
   requirements:
     id:   \d+
+
 inky_chap_statistics:
   pattern: /InkyChap/{inkychap}/stats
   defaults: { _controller: InkyCourseBundle:InkyChap:stats}

@@ -136,10 +136,10 @@ class Group extends BaseGroup
     /**
      * Set course
      *
-     * @param \Inky\COurseBundle\Entity\Course $course
+     * @param \Inky\CourseBundle\Entity\Course $course
      * @return Group
      */
-    public function setCourse(\Inky\COurseBundle\Entity\Course $course = null)
+    public function setCourse(\Inky\CourseBundle\Entity\Course $course = null)
     {
         $this->course = $course;
     
@@ -149,7 +149,7 @@ class Group extends BaseGroup
     /**
      * Get course
      *
-     * @return \Inky\COurseBundle\Entity\Course 
+     * @return \Inky\CourseBundle\Entity\Course 
      */
     public function getCourse()
     {

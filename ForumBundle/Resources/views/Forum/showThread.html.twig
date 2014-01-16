@@ -1,5 +1,103 @@
-<ul>
-  {% for message in messageList %}
-    <li>{{ message.content }}</li>
-  {% endfor %}
-</ul>
+{% extends "InkyForumBundle::layout.html.twig" %}
+
+{% set page_name = thread.title %}
+{% block title %}{{ parent() }} {{page_name}}{% endblock %}
+{% block pageTitle %}{{page_name}}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('inky_forum_boards')}}" class="divider">{{'forum.root.boards'|trans}}</a></li>
+	<li><a href="{{ path('inky_forum_topics',{'board':thread.topic.board.id})}}" class="divider">{{thread.topic.board.title}}</a></li>
+	<li><a href="{{ path('inky_forum_threads',{'topic':thread.topic.id})}}" class="divider">{{thread.topic.title}}</a></li>
+	<li><a href="{{ path('inky_forum_thread',{'thread':thread.id})}}" class="divider">{{thread.title}}</a></li>
+{% endblock %}
+
+
+
+
+{% block inky_body %}
+<div class="col-md-12 text-right" style="padding:0px;">
+	<span class="label label-default">{{'forum.thread.replies'|trans}} {{thread.replies}}</span>
+	<span class="label label-default">{{'forum.thread.views'|trans}} {{thread.views}}</span>
+</div>
+<div class="clearfix" style="width:100%;"></div>
+{% for message in messageList %}
+	{% if message.isFirstMessage %}
+		{% set panel_class = 'primary' %}
+		{% if message.user.id == app.user.id %}
+			{% set add_link = '
+				<a class="btn btn-xs btn-icon-only" 
+					data-toggle="tooltip"
+					data-original-title="' ~ 'forum.thread.edit_thread'|trans ~ '"
+					href="' ~ path('inky_forum_editThread',{'thread':thread.id})  ~ '">
+					<i class="glyphicon glyphicon-edit message_shortcut"></i>
+				</a>
+				<a class="btn btn-xs btn-icon-only" 
+					data-toggle="tooltip"
+					data-original-title="' ~ 'forum.thread.delete_thread'|trans ~ '"
+					href="' ~ path('inky_forum_deleteThread',{'thread':thread.id})  ~ '">
+					<i class="glyphicon glyphicon-remove message_shortcut"></i>
+				</a>
+				' %}
+		{% endif %}
+	{% else %}
+		{% set panel_class = 'default' %}
+		{% if message.user.id == app.user.id %}
+			{% set add_link = '
+				<a class="btn btn-xs btn-icon-only"
+					data-toggle="tooltip"
+					data-original-title="' ~ 'forum.thread.edit_message'|trans ~ '"
+					href="' ~ path('inky_forum_editMessage',{'message':message.id})  ~ '">
+				<i class="glyphicon glyphicon-edit message_shortcut"></i>
+				</a>
+				<a class="btn btn-xs btn-icon-only"
+					data-toggle="tooltip"
+					data-original-title="' ~ 'forum.thread.delete_message'|trans ~ '"
+					href="' ~ path('inky_forum_deleteMessage',{'message':message.id})  ~ '">
+				<i class="glyphicon glyphicon-remove message_shortcut"></i>
+				</a>
+				' %}
+		{% endif %}
+	{% endif %}
+	<div class="row panel panel-{{panel_class}} message">
+		<header class="panel-heading">
+			<div class="row clearfix">
+				<div class="col-md-7 pull-left">
+					<h3 class="panel-title">
+						{{message.user.username}} <span class="timestamper" >{{message.dateCreated|ago.0}} {{'ago.format.'~message.dateCreated|ago.1|trans}}</span>
+					</h3>
+				</div>
+				<div class="col-md-4 pull-right text-right">
+					<div class="btn-group">
+						<a class="btn btn-xs btn-icon-only"  data-toggle="tooltip" data-original-title="{{'forum.thread.visit_message'| trans }}" href="{{ path('inky_forum_message',{'message':message.id}) }}">
+							<i class="glyphicon glyphicon-fullscreen message_shortcut"></i>
+						</a>
+						<a class="btn btn-xs btn-icon-only" href="#post_47">
+							<i class="glyphicon glyphicon-link message_shortcut"></i>
+						</a>
+						{% if add_link is defined %}
+							{{add_link|raw}}
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</header>
+		<div class="panel-body">
+			{{ message.content | raw }}
+		</div>
+	</div>
+
+{% endfor %}
+<hr>
+<form action="" method="post" {{ form_enctype(form) }}>
+{% if form_errors(form.content) %}
+<div class="alert alert-danger">
+	{{ form_errors(form.content) }}
+</div>
+{% endif %}
+
+  {{ form_widget(form.content) }}
+{{ form_rest(form) }}
+<br/>
+<br/>
+<button  type="submit" class="btn btn-info">{{'forum.thread.end_answer'|trans}}</button>
+</form>
+{% endblock inky_body %}

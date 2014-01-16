@@ -54,7 +54,7 @@ class InkyChap
     private $orderId;
 
 	/**
-     * @ORM\ManyToOne(targetEntity="Inky\CourseBundle\Entity\Lesson\Lesson",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Inky\CourseBundle\Entity\Lesson\Lesson",  cascade={"persist","remove"}, inversedBy="inkychap")
      */
     private $lesson;
 	

@@ -128,37 +128,6 @@ margin-right:10px;
           </div>
         </div>
 	</div>
-	
-	{% if course.image%}
-	<!-- <img src="{{ asset(course.image.webPath) }}" alt="{{ course.image.alt }}"/> -->
-	{% endif %}
-	<table class="table table-bordered">
-        <thead>
-        <tr>
-            <th style="width:15px;" class="text-center ">{{'course.viewCourse.number' | trans }}</th>
-            <th>{{'course.viewCourse.course_name' | trans }}</th>
-            <th>{{'course.viewCourse.status' | trans }}</th>
-            <th class="text-center">{{'course.viewCourse.action' | trans }}</th>
-        </tr>
-        </thead>
-	{% for lesson in lessonList %}
-        <tr class="success">
-			<td class="text-center">{{ lesson.orderid }}</td>
-			<td>{{ lesson.title }}</td>
-			<td>???????</td>
-            <td class="text-center"><a href="{{ path('lesson_view', {'lesson': lesson.id}) }}" class="button green" >
-			Review</a></td>
-		</tr>
-	{% endfor %}
-	</table>
-			
-	
-	{% if is_granted('ROLE_AUTEUR') %}
-	<p>
-	<a href="{{ path('InkyCourse_modifier', {'id': course.id}) }}" class="btn"><i class="icon-edit"></i>{{'course.viewCourse.edit_course' | trans }}</a>
-	{% endif %}
-
-
 {% endblock %}
 
 {% block javascripts %}{{ parent() }}

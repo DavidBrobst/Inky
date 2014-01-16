@@ -1,10 +1,60 @@
-Topics
-<ul>
-  {% for topic in topics %}
-	  <li>
-	    <a href="{{ path("inky_forum_thread", {threadId: thread.id}) }}">
-	    	{{ topic.title }}
-	    </a>
-	  </li>
-  {% endfor %}
-</ul>
+{% extends "InkyForumBundle::layout.html.twig" %}
+
+{% set page_name = 'topics'|trans %}
+{% block title %}{{ parent() }} {{page_name}}{% endblock %}
+{% block pageTitle %}{{page_name}}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('inky_forum_boards')}}" class="divider">{{'forum.topic.board'|trans}}</a></li>
+	<li>{{page_name}}</li>
+{% endblock %}
+
+
+
+
+
+{% block inky_body %}
+	Here you have a list of assignment given to you by the guy in charge of a course you have taken
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th class="center" style="width:32px;">
+					&nbsp;
+				</th>
+				<th class="left">
+					{{'forum.topic.topic'|trans}}
+				</th>
+				<th class="center" style="width:60px;">
+					{{'forum.topic.threads'|trans}}
+				</th>
+				<th class="center" style="width:60px;">
+					{{'forum.topic.posts'|trans}}
+				</th>
+			</tr>
+		</thead>
+	{% for topic in topicList %}
+		<tr>
+			<td class="center">
+				{% if is_granted('ROLE_MODERATOR') %}
+				<a class="btn btn-xs btn-icon-only" data-toggle="tooltip" data-original-title="{{'forum.topic.edit_topic'|trans }}" href="{{path('inky_forum_editTopic',{'topic':topic.id})}}">
+					<i class="glyphicon glyphicon-edit" style="vertical-align:bottom;color:orange;"></i>
+				</a>
+				<a class="btn btn-xs btn-icon-only" data-toggle="tooltip" data-original-title="{{'forum.topic.delete_topic'|trans }}" href="{{path('inky_forum_deleteTopic',{'topic':topic.id})}}">
+					<i class="glyphicon glyphicon-remove" style="vertical-align:bottom;color:red;"></i>
+				</a>
+				{% endif %}
+				
+			</td>
+			<td>
+				<h4><a href="{{ path('inky_forum_threads',{'topic':topic.id} ) }}">{{topic.title}}</a></h4>
+				<blockquote class="slim">{{topic.description}}</blockquote>
+			</td>
+			<td class="center">
+				<span class="label label-info count" title="{{topic.cachedThreadNb}} {{'topics.topics_in_topic' |trans}}">{{topic.cachedThreadNb}}</span>
+			</td>
+			<td class="center">
+				<span class="label label-info count" title="{{topic.cachedPostNb}} {{'topics.posts_in_topic' | trans}}">{{topic.cachedPostNb}}</span>
+			</td>
+		</tr>
+	{% endfor%}
+	</table>
+{% endblock inky_body %}

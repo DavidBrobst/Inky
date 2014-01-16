@@ -1,0 +1,169 @@
+html, body{
+	width:100%;
+	height:100%;
+	margin:0;
+	padding:0;
+}
+#container{
+	width:100%;
+	height:inherit;
+	margin:0;
+}
+#extended-side-bar{
+	height:inherit;
+	padding:15px 5px 5px 5px;
+	background-color:#f4f4f4;
+	border-right:15px #ffffff solid;
+}
+#extended-side-bar #course_title{
+	text-align:center;
+	color: #323232;
+	font-size: 15px;
+	font-weight:bold;
+	line-height: 1.2em;
+	margin-bottom: 24px;
+	font-family: sans-serif;
+}
+#extended-side-bar #course_title a:hover{
+	text-decoration:none;
+}
+#extended-side-bar #course_actions{
+	text-align:left;
+}
+#extended-side-bar #course_actions a{
+	display:block;
+	width:100%;
+	margin:0;
+	padding:10px 10px 10px 25px;
+}
+#extended-side-bar #course_actions a:hover{
+	background-color:#fff;
+	text-decoration:none;
+}
+#extended-side-bar #chap_advancement{
+	position:absolute;
+	text-align:center;
+	left:-5px;
+	bottom:5px;
+	padding:10px;
+	background:#fff;
+}
+#content{
+	height:inherit;
+	margin:0;
+	padding:0;
+	overflow:auto;
+}
+#bg-filter, #inky-content{
+	height:inherit;
+	right:0;
+	top:0;
+	padding:0;
+	position:absolute;
+}
+#bg-filter{
+	background-color:#da6700;
+	opacity:0.8;
+	filter:Alpha(opacity=80); /* IE8 and earlier */
+	z-index:20;
+	display:none;
+}
+#inky-content{
+	background-color:transparent;
+	z-index:21;
+	display:none;
+}
+#content-top, #content-left, #content-right, #content-center{
+	
+}
+#inky-content div#content-top{
+	height:20px;
+}
+#inky-content div#content-center{
+	background-color:white;
+	height:inherit;
+	margin-top:25px;
+	overflow:auto;
+	padding: 31px 50px 49px;
+	color:#1F1F1F;
+	font-family: "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+	font-weight: normal;
+	font-size: 12px;
+	line-height: 1.6;
+	
+	-webkit-box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+	-moz-box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+	box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+}
+#inky-content div#content-right{
+}
+#loader{
+height:150px;
+width:150px;
+margin:25px auto;
+}
+#loader img#loadingImg{
+width:100%;
+height:100%;
+}
+.lesson_block, .lesson_detail{
+	height:250px;
+	width:250px;
+	float:left;
+	position:relative;
+	-webkit-box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+	-moz-box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+	box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+}
+.lesson_block{
+	margin:	5px;
+	padding:5px;
+	z-index:10;
+	background-color: #0088cc;
+	color: #fff;
+	font-family: 'open_sans_regular',sans-serif;
+	font-size:22px;
+	line-height:220px;
+	text-align: center;
+}
+.lesson_block span{
+	display: inline-block;
+	line-height: normal;
+	vertical-align:middle;
+}
+
+.lesson_detail{
+	border:none;
+	margin:5px 0 0 -255px;
+	padding:20px;
+	z-index:5;
+	background-color:#9fc2fe;
+	overflow:auto;
+}
+.lesson_detail a{
+	color:#3a7ffa;
+	text-decoration:none;
+	font-size:120%;
+}
+.lesson_detail a:hover{
+	
+}
+/* InkyChap Content */
+/* Resposive Youtube Video */
+.video-container {
+position: relative;
+margin:0;
+padding: 0px 0 56.25% 0;
+height: 0;
+overflow: hidden;
+}
+ 
+.video-container iframe,
+.video-container object,
+.video-container embed {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+}

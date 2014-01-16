@@ -16,9 +16,7 @@ class BoardType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('position')
-            ->add('cachedPosts')
-            ->add('cachedTopics')
+            ->add('description','textarea')
         ;
     }
     

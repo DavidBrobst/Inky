@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Course content</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Bootstrap -->
+		{% block stylesheets %}
+			{% stylesheets '@InkyCourseBundle/Resources/public/css/CourseContent/*' filter='cssrewrite'%}
+			<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+			{% endstylesheets %}
+		{% endblock stylesheets %}		
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+		<!--[if lt IE 8]>
+		<!-- Add thi ressource for IE 7 >
+		<link href="/css/bootstrap-ie7.css" rel="stylesheet">
+		<![endif]-->
+		<style type="text/css">
+			
+		</style>
+	</head>
+	<body>
+		<div id="container" class="row">
+			<div id="collapsed-side-bar" class="visible-xs">
+				{% block collapsed_sidebar_menu %}
+				{% endblock collapsed_sidebar_menu %}
+			</div>
+			<div id="extended-side-bar" class="col-md-2 col-sm-3 hidden-xs">
+				{% block extended_sidebar_menu %}
+				{% endblock extended_sidebar_menu %}
+			</div>
+			<div id="content" class="col-md-10 col-sm-9 col-xs-12">
+				{% block lesson_blocks %}
+				{% endblock lesson_blocks %}
+			</div>
+			<div id="bg-filter" class="col-md-10 col-sm-9 col-xs-12">
+			</div>
+			<div id="inky-content" class="col-md-10 col-sm-9 col-xs-12">
+				<div class="row" style="margin:0">
+					<div id="content-left" class="col-md-2 col-sm-2 col-xs-1"></div>
+					<div id="content-center" class="col-md-8 col-sm-8 col-xs-10"><br/><br/></div>
+					<div id="content-right" class="col-md-2 col-sm-2 col-xs-1"><a id="backToLessons" href="">remove</a></div>
+				</div>
+			</div>
+		</div>
+		{% javascripts '@InkyCourseBundle/Resources/public/js/CourseContent/*' %}
+			<script type="text/javascript" src="{{ asset_url }}"></script>
+		{% endjavascripts %}
+		{% block more_js %}
+		{% endblock more_js %}
+	</body>
+</html>

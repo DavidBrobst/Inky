@@ -1,5 +1,69 @@
 {% extends "::layout.html.twig" %}
 
+{% block ownStyle %}
+<style type="text/css">
+body {
+  background:transparent;
+}
 
-    {% block inky_body %}
-    {% endblock %}
+.inky-template {
+  border:none;
+  box-shadow:none;
+  background:transparent;
+  padding:0;
+  margin:0;margin-top:25px;
+}
+thead{
+color:#333;
+}
+.center{
+text-align:center;
+}
+span.count{
+line-height:1;
+vertical-align: baseline;
+}
+i.message_shortcut{
+color:white;
+}
+div.message.panel{
+margin:15px 0 0 0;
+}
+div.alert ul{
+margin-left:-30px;
+}
+div.alert li{
+list-style-type:none;
+padding-left:0px;
+}
+.panel-primary {
+border-color:  #00A3EF;
+}
+.panel-primary>.panel-heading {
+background-color: #00A3EF;
+border-color: #00A3EF;
+}
+.panel-default>.panel-heading i{
+color:#333;
+}
+
+div.forum-unit input,div.forum-unit textarea{
+margin-bottom:15px;
+}
+</style>
+{% endblock ownStyle %}
+
+{% block inky_body %}
+<div class="clearfix" style=""></div>
+	
+
+
+{% endblock %}
+
+{% block javascripts %}{{ parent() }}
+<script type="text/javascript">
+$('[data-toggle="tooltip"]').tooltip({
+    'placement': 'top'
+});
+</script>
+{% endblock javascripts %}

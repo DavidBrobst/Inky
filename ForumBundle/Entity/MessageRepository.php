@@ -12,4 +12,19 @@ use Doctrine\ORM\EntityRepository;
  */
 class MessageRepository extends EntityRepository
 {
+	// In the controler we select only one of those, not so good WILL NEED SOME WORK
+	public function getLastMessageUser($thread)
+	{
+		$query = $this	->createQueryBuilder('m')
+						->leftJoin('m.user','u')
+							->addSelect('u')
+						->where('m.isDeleted = 0 AND m.thread = '.$thread->getId())
+						->orderBy('m.id', 'DESC')
+						->setMaxResults( 1 )
+						
+						->getQuery()
+						->getOneOrNullResult();
+					
+		return $query;
+	}
 }

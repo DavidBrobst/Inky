@@ -1,7 +1,50 @@
-<form action="" method="post" {{ form_enctype(form) }}>
-  {{ form_errors(form) }}
+{% extends "InkyForumBundle::layout.html.twig" %}
 
-  {{ form_widget(form) }}
+{% set page_name = 'forum.editThread.edit_thread'|trans %}
+{% block title %}{{ parent() }} {{page_name}}{% endblock %}
+{% block pageTitle %}{{page_name}}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('inky_forum_boards')}}" class="divider">{{'forum.boards'|trans}}</a></li>
+	<li><a href="{{ path('inky_forum_topics',{'board':thread.topic.board.id})}}" class="divider">{{thread.topic.board.title}}</a></li>
+	<li><a href="{{ path('inky_forum_threads',{'topic':thread.topic.id})}}" class="divider">{{thread.topic.title}}</a></li>
+	<li><a href="{{ path('inky_forum_thread',{'thread':thread.id})}}" class="divider">{{thread.title}}</a></li>
+	<li>{{ page_name }}</li>
+{% endblock %}
 
-  <button>Send Message</button>
+
+
+
+{% block inky_body %}
+<form action="{{ path('inky_forum_editThread',{'thread':thread.id}) }}" method="post" {{ form_enctype(form) }}>
+<div  class="form-group forum-unit">
+	{% if form_errors(form.title) %}
+	<div class="alert alert-danger">
+		{{ form_errors(form.title) }}
+	</div>
+	{% endif %}
+
+	{{ form_label(form.title, 'forum.editThread.title' | trans , {'label_attr': {'class': 'col-sm-3'}}) }}
+	<div class="col-sm-9">
+		{{ form_widget(form.title, { 'attr': {'class': 'form-control'} }) }}
+	</div>
+</div>
+
+
+<div  class="form-group forum-unit">
+	{% if form_errors(form.message.0.content) %}
+	<div class="alert alert-danger">
+		{{ form_errors(form.message.0.content) }}
+	</div>
+	{% endif %}
+	{{ form_label(form.message.0.content, 'forum.editThread.content' | trans , {'label_attr': {'class': 'col-sm-3'}}) }}
+	<div class="col-sm-9">
+		{{ form_widget(form.message.0.content, { 'attr': {'class': 'form-control'} }) }}
+	</div>
+</div>
+
+</div>
+	{{ form_rest(form) }}
+	<button  type="submit" class="btn btn-info">{{'forum.editThread.edit'|trans}}</button>
+</div>
 </form>
+{% endblock inky_body %}

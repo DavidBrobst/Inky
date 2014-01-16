@@ -74,6 +74,11 @@ class Lesson
 	private $tags;
 		
 	/**
+     * @ORM\OneToMany(targetEntity="Inky\CourseBundle\Entity\InkyChap\InkyChap",  cascade={"persist","remove"}, mappedBy="lesson")
+     */
+    private $inkychap;
+	
+	/**
 	* @ORM\OneToOne(targetEntity="Inky\CourseBundle\Entity\Comment\Thread")
 	*
 	*/
@@ -315,5 +320,38 @@ class Lesson
     public function getAskThread()
     {
         return $this->askThread;
+    }
+
+    /**
+     * Add inkychap
+     *
+     * @param \Inky\CourseBundle\Entity\Lesson\Lesson $inkychap
+     * @return Lesson
+     */
+    public function addInkychap(\Inky\CourseBundle\Entity\Lesson\Lesson $inkychap)
+    {
+        $this->inkychap[] = $inkychap;
+    
+        return $this;
+    }
+
+    /**
+     * Remove inkychap
+     *
+     * @param \Inky\CourseBundle\Entity\Lesson\Lesson $inkychap
+     */
+    public function removeInkychap(\Inky\CourseBundle\Entity\Lesson\Lesson $inkychap)
+    {
+        $this->inkychap->removeElement($inkychap);
+    }
+
+    /**
+     * Get inkychap
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getInkychap()
+    {
+        return $this->inkychap;
     }
 }

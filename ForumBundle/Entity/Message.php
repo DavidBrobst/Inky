@@ -59,9 +59,9 @@ class Message
     /**
      * @var boolean
      *
-     * @ORM\Column(name="isFirstMessage", type="boolean", nullable=true )
+     * @ORM\Column(name="isFirstMessage", type="boolean")
      */
-    private $isFirstMessage;
+    private $isFirstMessage = false;
 
     /**
      * @var integer
@@ -71,7 +71,7 @@ class Message
     private $cachedVote = 0;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="Inky\ForumBundle\Entity\Thread",cascade={"persist"}, inversedBy="message")
+	 * @ORM\ManyToOne(targetEntity="Inky\ForumBundle\Entity\Thread", inversedBy="message")
 	 */
 	private $thread;
 

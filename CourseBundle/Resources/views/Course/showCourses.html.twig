@@ -24,73 +24,89 @@ display:none;
 </style>
 {% endblock ownStyle %}
 {% block inky_body %}
-<div class="courses-search-box" style="width:100%;padding:15px;">
-    <div class="input-group input-group-lg inner-courses-search-box" style="margin:auto;">
-		<input type="text" class="form-control" id="search_input" placeholder="{{'search'|trans}}">
-		<div class="input-group-btn">
-			<button type="button" class="btn btn-default" id="go_search" tabindex="-1"><span class="glyphicon glyphicon-search"></span></button>
-			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
-				<span class="glyphicon glyphicon-filter"></span>
-				<span class="sr-only">Toggle Dropdown</span>
-			</button>
-			<ul class="dropdown-menu pull-right" role="menu">
-				<li class="dropdown-header">{{'filter.filter'|trans}}</li>
-				<li><a href="#">{{'filter.relevance'|trans}}</a></li>
-				<li><a href="#">{{'filter.ratings'|trans}}</a></li>
-				<li><a href="#">{{'filter.creationDate'|trans}}</a></li>
-				<li><a href="#">{{'filter.popular'|trans}}</a></li>
-				<li class="divider"></li>
-				<li class="dropdown-header">{{'filter.duration'|trans}}</li>
-				<li><a href="#">{{'filter.duration.long'|trans}}</a></li>
-				<li><a href="#">{{'filter.duration.short'|trans}}</a></li>
-			</ul>
+{{totalNbCourses}} courses
+{{nbCoursePerPage}} coursesper page
+	<div class="courses-search-box" style="width:100%;padding:15px;">
+		<div class="input-group input-group-lg inner-courses-search-box" style="margin:auto;">
+			<input type="text" class="form-control" id="search_input" placeholder="{{'search'|trans}}">
+			<div class="input-group-btn">
+				<button type="button" class="btn btn-default" id="go_search" tabindex="-1"><span class="glyphicon glyphicon-search"></span></button>
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+					<span class="glyphicon glyphicon-filter"></span>
+					<span class="sr-only">Toggle Dropdown</span>
+				</button>
+				<ul class="dropdown-menu pull-right" role="menu">
+					<li class="dropdown-header">{{'filter.filter'|trans}}</li>
+					<li><a href="#">{{'filter.relevance'|trans}}</a></li>
+					<li><a href="#">{{'filter.ratings'|trans}}</a></li>
+					<li><a href="#">{{'filter.creationDate'|trans}}</a></li>
+					<li><a href="#">{{'filter.popular'|trans}}</a></li>
+					<li class="divider"></li>
+					<li class="dropdown-header">{{'filter.duration'|trans}}</li>
+					<li><a href="#">{{'filter.duration.long'|trans}}</a></li>
+					<li><a href="#">{{'filter.duration.short'|trans}}</a></li>
+				</ul>
+			</div>
 		</div>
 	</div>
-</div>
-<div style="width:100%;margin-bottom:15px;">
-</div>
+	<div style="width:100%;margin-bottom:15px;">
+	</div>
 	<div style="clear:both;"></div>
-{% if courseList|length > 0 %}
-<div class="masonry js-masonry"  data-masonry-options='{"isFitWidth": true, "gutter": 12}'>
+	{% if courseList|length > 0 %}
+		<div id="courseListContainer" class="masonry js-masonry"  data-masonry-options='{"isFitWidth": true, "gutter": 12}'>
+			{% include 'InkyCourseBundle:Course:showCoursesContent.html.twig' %}
+		</div>
+	{% else %}
+		<div class="no-result" style="">
+			{{ 'course.showCourses.nothing_here' | trans }}
+		</div>
+	{% endif %}	
+	
+	{% if nbCoursePerPage < totalNbCourses %}
+		<input id="courseStart" value="{{nbCoursePerPage}}" readonly style="visibility:hidden"/>
+		<div id="fetcherContainer" class="progress">
+			<div class="progress-bar progress-bar-warning"  role="progressbar" aria-valuenow="100"  aria-valuemin="0" aria-valuemax="100" style="width: 100%" id="fetch" >
+				<button class="" id="fetch" type="button">{{'course.showCourses.load_more'|trans}}</button>
+			</div>
+		</div>
+	{% endif %}
+	
+{% endblock inky_body %}
 
-	{% for course in courseList %}
-	<div class="item">
-		{% if course.image%}
-		<div >
-			<a href="{{ path('course_view', {'course': course.id}) }}" class="courses">
-				<img  src="{{ asset(course.image.webPath) }}" alt="{{ course.image.alt }}"/>
-			</a>
-		</div>
-		{% else %}
-		<div >
-			<a href="{{ path('course_view', {'course': course.id}) }}" class="courses">
-				<img  src="../../web/uploads/img/course.png" alt="noimg"/>
-			</a>
-		</div>
-		{% endif %}
-		<div class="courses-detail" >
-			<a href="{{ path('course_view', {'course': course.id}) }}" ><h4>{{course.title}}</h4></a><br/>
-			{{course.description|raw}}<br/>
-		{% for tags in course.tags %}
-			<span class="label label-info">{{tags.tagLabel}}</span>
-		{% endfor %}
-		</div>
-		<div class="clearfix"></div>
-	</div>
-	
-	{% endfor %}
-</div>
-{% else %}
-<div class="no-result" style="">
-{{ 'course.showCourses.nothing_here' | trans }}
-</div>
-{% endif %}
-{% endblock %}
 {% block moreJs %}
-	
 <script type="text/javascript">
 $( "#go_search" ).click(function() {
   if($('#search_input').val()){window.location.replace( "{{ path('general_search') }}/"+$('#search_input').val() );}
 });
+{% if nbCoursePerPage < totalNbCourses %}
+	$(document).ready(function() {
+		var $prototype = $('#courseListContainer');
+		$('button#fetch').click(function(e) {
+			var courseStart = parseInt($('#courseStart').val());
+			$('#fetcherContainer').addClass('progress-striped active');
+			$.ajax({
+				type: 'POST',
+				data: {'CourseStart' : courseStart},          
+				url:  '{{ path("courses_list",{"section":section}) }}',      
+				success: function(response) {
+					 // Make jQuery object from HTML string
+					var $moreBlocks = jQuery(response).filter('div.item');
+					// Append new blocks to container
+					$prototype.append( $moreBlocks );
+					// Have Masonry position new blocks ;-)
+					$prototype.masonry( 'appended', $moreBlocks ); 
+					
+					$('#fetcherContainer').removeClass('progress-striped active');
+					courseStart = parseInt(courseStart+{{nbCoursePerPage}});
+					$('#courseStart').val(courseStart);
+					if( parseInt(courseStart) >= parseInt({{totalNbCourses}}) ){ $('#fetcherContainer').css("display","none"); }
+					},
+				error: function (xhr, ajaxOptions, thrownError) {
+					alert(thrownError);
+				}
+			});
+		});
+	});
+{% endif %}
 </script>
 {% endblock %}

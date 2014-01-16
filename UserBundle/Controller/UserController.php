@@ -55,7 +55,8 @@ class UserController extends Controller
 		// Points
 		$point = $this->container->get('inky_user.point');
 		$pointInfo = $point->showPoint($this->getUser());
-			// Need of month and points for each month
+		
+		// Need of month and points for each month
 		$month = array();
 		$monthlyPoint = array();
 		$cumulativePoint = array();

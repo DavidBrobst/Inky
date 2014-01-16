@@ -12,11 +12,9 @@
 
     <!-- Bootstrap core CSS -->
     {% block stylesheets %}
-	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" type="text/css" />
-    {% stylesheets '@InkyCourseBundle/Resources/public/css/Index/*' filter='cssrewrite'%}
+		{% stylesheets '@InkyCourseBundle/Resources/public/css/Index/*' filter='cssrewrite'%}
 		<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
-    {% endstylesheets %}
-	  
+		{% endstylesheets %}
     {% endblock stylesheets %}
   </head>
 <!-- NAVBAR

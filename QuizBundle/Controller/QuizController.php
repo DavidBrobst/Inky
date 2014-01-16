@@ -111,6 +111,7 @@ class QuizController extends Controller
 	{
 		return $this->render('InkyQuizBundle:Quiz:editQuizzes.html.twig', array('lesson' => $lesson));
 	}
+
 	public function editQuizAction (Quiz $quiz)
 	{				
 		$em = $this->getDoctrine()->getManager();
@@ -243,49 +244,7 @@ class QuizController extends Controller
 			return $this->render(	'InkyQuizBundle:UserAnswer:'.$QuestionType.'.html.twig',$option
 								);
 		}
-		
-		function getQuRef($quiz,$em)
-		{
-					
-			// We display question refference in an array with the type of question, its Id (what we need to get it) AND an OrderId to know how to diplay them
-			// ToDo: Add the order thingy in each array created
-			$QuRef = array ();
-			//McQuestion
-			$McQuestionList = $em -> getRepository('InkyQuizBundle:Question\McQuestion')->findByQuiz($quiz);
-			foreach ($McQuestionList as $McQu)
-			{
-				$QuRef[] = array('McQuestion',$McQu->getId());
-			}
-			$InputQuestionList = $em -> getRepository('InkyQuizBundle:Question\InputQuestion')->findByQuiz($quiz);
-			foreach ($InputQuestionList as $InputQu)
-			{
-				$QuRef[] = array('InputQuestion',$InputQu->getId());
-			}
-			$TfQuestionList = $em -> getRepository('InkyQuizBundle:Question\TfQuestion')->findByQuiz($quiz);
-			foreach ($TfQuestionList as $TfQu)
-			{
-				$QuRef[] = array('TfQuestion',$TfQu->getId());
-			}
-			$SubmitQuestionList = $em -> getRepository('InkyQuizBundle:Question\SubmitQuestion')->findByQuiz($quiz);
-			foreach ($SubmitQuestionList as $SubmitQu)
-			{
-				$QuRef[] = array('SubmitQuestion',$McQu->getId());
-			}
-			
-			return $QuRef;
-		}
-		// Once ou Question Refenrence has been populated, all that is left to do is to fetch the question and send the answer to the datababez
-		return $this->render(	'InkyQuizBundle:UserAnswer:takeQuiz.html.twig',array(	'quiz' => $quiz,
-																						'QuRef' => getQuRef($quiz,$em)
-																				)
-							);
 	}
-	
-	
-	
-	
-	
-	
 	
 	public function renderQuestionAction($type,$id,$option = array())
 	{

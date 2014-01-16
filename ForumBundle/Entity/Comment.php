@@ -43,7 +43,7 @@ class Comment
     private $content;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="Inky\ForumBundle\Entity\Message",cascade={"persist"}, inversedBy="vote")
+	 * @ORM\ManyToOne(targetEntity="Inky\ForumBundle\Entity\Message",cascade={"persist"}, inversedBy="comment")
 	 */
 	private $message;
 

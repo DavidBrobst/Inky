@@ -24,6 +24,7 @@ user_profile_edit:
     defaults: { _controller: FOSUserBundle:Profile:edit }
     requirements:
         user : \d+
+
 password_edit:
     pattern: /password
     defaults: { _controller: FOSUserBundle:ChangePassword:changePassword }

@@ -6,28 +6,82 @@ inky_forum_newBoard:
     pattern:  /new-board
     defaults: { _controller: InkyForumBundle:Forum:newBoard }
 
+inky_forum_editBoard:
+    pattern:  /{board}/edit-board
+    defaults: { _controller: InkyForumBundle:Forum:editBoard }
+    requirements:
+        board : \d+
+
 inky_forum_topics:
     pattern:  /{board}/topics
     defaults: { _controller: InkyForumBundle:Forum:showTopics }
     requirements:
         board : \d+
+
 inky_forum_newTopic:
     pattern:  /{board}/new-topic
     defaults: { _controller: InkyForumBundle:Forum:newTopic }
     requirements:
         board : \d+
+
+inky_forum_editTopic:
+    pattern:  /{topic}/edit-topic
+    defaults: { _controller: InkyForumBundle:Forum:editTopic }
+    requirements:
+        board : \d+
+
+inky_forum_deleteTopic:
+    pattern:  /{topic}/delete-topic
+    defaults: { _controller: InkyForumBundle:Forum:deleteTopic }
+    requirements:
+        board : \d+
+
 inky_forum_threads:
     pattern:  /{topic}/threads
     defaults: { _controller: InkyForumBundle:Forum:showThreads }
     requirements:
         topic : \d+
+
 inky_forum_newThread:
     pattern:  /{topic}/new-thread
     defaults: { _controller: InkyForumBundle:Forum:newThread }
     requirements:
         topic : \d+
+
+inky_forum_editThread:
+    pattern:  /{thread}/edit-thread
+    defaults: { _controller: InkyForumBundle:Forum:editThread }
+    requirements:
+        thread : \d+
+
+inky_forum_deleteThread:
+    pattern:  /{thread}/delete-thread
+    defaults: { _controller: InkyForumBundle:Forum:deleteThread }
+    requirements:
+        thread : \d+
+
 inky_forum_thread:
     pattern:  /thread/{thread}
     defaults: { _controller: InkyForumBundle:Forum:showThread }
     requirements:
-        topic : \d+
+        thread : \d+
+
+
+inky_forum_message:
+    pattern:  /post/{message}
+    defaults: { _controller: InkyForumBundle:Forum:showMessage }
+    requirements:
+        message : \d+
+
+inky_forum_editMessage:
+    pattern:  /{message}/edit-message
+    defaults: { _controller: InkyForumBundle:Forum:editMessage }
+    requirements:
+        thread : \d+
+
+inky_forum_deleteMessage:
+    pattern:  /{message}/delete-message
+    defaults: { _controller: InkyForumBundle:Forum:deleteMessage }
+    requirements:
+        thread : \d+
+

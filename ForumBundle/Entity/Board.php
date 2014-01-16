@@ -28,26 +28,33 @@ class Board
      */
     private $title;
 
+	/**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", length=500)
+     */
+    private $description;
+
     /**
      * @var integer
      *
-     * @ORM\Column(name="position", type="integer")
+     * @ORM\Column(name="position", type="integer", nullable=true)
      */
     private $position;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="cachedPosts", type="integer")
+     * @ORM\Column(name="cachedPostNb", type="integer")
      */
-    private $cachedPosts;
+    private $cachedPostNb = 0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="cachedTopics", type="integer")
+     * @ORM\Column(name="cachedTopicNb", type="integer")
      */
-    private $cachedTopics;
+    private $cachedTopicNb = 0;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Inky\ForumBundle\Entity\Topic",cascade={"persist"}, mappedBy="board")
@@ -116,51 +123,6 @@ class Board
     }
 
     /**
-     * Set cachedPosts
-     *
-     * @param integer $cachedPosts
-     * @return Board
-     */
-    public function setCachedPosts($cachedPosts)
-    {
-        $this->cachedPosts = $cachedPosts;
-    
-        return $this;
-    }
-
-    /**
-     * Get cachedPosts
-     *
-     * @return integer 
-     */
-    public function getCachedPosts()
-    {
-        return $this->cachedPosts;
-    }
-
-    /**
-     * Set cachedTopics
-     *
-     * @param integer $cachedTopics
-     * @return Board
-     */
-    public function setCachedTopics($cachedTopics)
-    {
-        $this->cachedTopics = $cachedTopics;
-    
-        return $this;
-    }
-
-    /**
-     * Get cachedTopics
-     *
-     * @return integer 
-     */
-    public function getCachedTopics()
-    {
-        return $this->cachedTopics;
-    }
-    /**
      * Constructor
      */
     public function __construct()
@@ -222,5 +184,74 @@ class Board
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Board
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set cachedPostNb
+     *
+     * @param integer $cachedPostNb
+     * @return Board
+     */
+    public function setCachedPostNb($cachedPostNb)
+    {
+        $this->cachedPostNb = $cachedPostNb;
+    
+        return $this;
+    }
+
+    /**
+     * Get cachedPostNb
+     *
+     * @return integer 
+     */
+    public function getCachedPostNb()
+    {
+        return $this->cachedPostNb;
+    }
+
+    /**
+     * Set cachedTopicNb
+     *
+     * @param integer $cachedTopicNb
+     * @return Board
+     */
+    public function setCachedTopicNb($cachedTopicNb)
+    {
+        $this->cachedTopicNb = $cachedTopicNb;
+    
+        return $this;
+    }
+
+    /**
+     * Get cachedTopicNb
+     *
+     * @return integer 
+     */
+    public function getCachedTopicNb()
+    {
+        return $this->cachedTopicNb;
     }
 }

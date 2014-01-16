@@ -1,8 +1,46 @@
-New Board
-<form action="" method="post" {{ form_enctype(form) }}>
-  {{ form_errors(form) }}
+{% extends "InkyForumBundle::layout.html.twig" %}
 
-  {{ form_widget(form) }}
+{% set page_name = 'forum.editBoard.edit_board'|trans %}
+{% block title %}{{ parent() }} {{page_name}}{% endblock %}
+{% block pageTitle %}{{page_name}}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('inky_forum_boards')}}" class="divider">{{'forum.boards'|trans}}</a></li>
+	<li><a href="{{ path('inky_forum_topics',{'board':board.id})}}" class="divider">{{board.title}}</a></li>
+	<li>{{ page_name }}</li>
+{% endblock %}
 
-  <button>Create Board</button>
+
+{% block inky_body %}
+<form action="{{ path('inky_forum_editBoard',{'board':board.id}) }}" method="post" {{ form_enctype(form) }}>
+<div  class="form-group forum-unit">
+	{% if form_errors(form.title) %}
+	<div class="alert alert-danger">
+		{{ form_errors(form.title) }}
+	</div>
+	{% endif %}
+
+	{{ form_label(form.title, 'forum.editThread.title' | trans , {'label_attr': {'class': 'col-sm-3'}}) }}
+	<div class="col-sm-9">
+		{{ form_widget(form.title, { 'attr': {'class': 'form-control'} }) }}
+	</div>
+</div>
+
+
+<div  class="form-group forum-unit">
+	{% if form_errors(form.description) %}
+	<div class="alert alert-danger">
+		{{ form_errors(form.description) }}
+	</div>
+	{% endif %}
+	{{ form_label(form.description, 'forum.editBoard.description' | trans , {'label_attr': {'class': 'col-sm-3'}}) }}
+	<div class="col-sm-9">
+		{{ form_widget(form.description, { 'attr': {'class': 'form-control'} }) }}
+	</div>
+</div>
+
+</div>
+	{{ form_rest(form) }}
+	<button  type="submit" class="btn btn-info">{{'forum.editBoard.edit_board'|trans}}</button>
+</div>
 </form>
+{% endblock inky_body %}

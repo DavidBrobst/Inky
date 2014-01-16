@@ -63,6 +63,13 @@ class Thread
      */
     private $isFlagged = 0;
 
+	/**
+     * @var boolean
+     *
+     * @ORM\Column(name="isAnswered", type="boolean")
+     */
+    private $isAnswered = 0;
+
     /**
      * @var integer
      *
@@ -70,13 +77,27 @@ class Thread
      */
     private $views = 0;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="replies", type="integer")
+     */
+    private $replies = 0;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="last", type="datetime")
+     */
+    private $last;
+
 	/**
 	 * @ORM\ManyToOne(targetEntity="Inky\ForumBundle\Entity\Topic",cascade={"persist"}, inversedBy="thread")
 	 */
 	private $topic;
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="Inky\ForumBundle\Entity\Message",cascade={"persist"}, mappedBy="thread")
+	 * @ORM\OneToMany(targetEntity="Inky\ForumBundle\Entity\Message",cascade={"persist","remove"}, mappedBy="thread")
 	 */
 	private $message;
 	
@@ -261,6 +282,7 @@ class Thread
     public function __construct()
     {
         $this->message = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->last = new \Datetime();
     }
     
     /**
@@ -340,5 +362,74 @@ class Thread
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set isAnswered
+     *
+     * @param boolean $isAnswered
+     * @return Thread
+     */
+    public function setIsAnswered($isAnswered)
+    {
+        $this->isAnswered = $isAnswered;
+    
+        return $this;
+    }
+
+    /**
+     * Get isAnswered
+     *
+     * @return boolean 
+     */
+    public function getIsAnswered()
+    {
+        return $this->isAnswered;
+    }
+
+    /**
+     * Set replies
+     *
+     * @param integer $replies
+     * @return Thread
+     */
+    public function setReplies($replies)
+    {
+        $this->replies = $replies;
+    
+        return $this;
+    }
+
+    /**
+     * Get replies
+     *
+     * @return integer 
+     */
+    public function getReplies()
+    {
+        return $this->replies;
+    }
+
+    /**
+     * Set last
+     *
+     * @param \DateTime $last
+     * @return Thread
+     */
+    public function setLast($last)
+    {
+        $this->last = $last;
+    
+        return $this;
+    }
+
+    /**
+     * Get last
+     *
+     * @return \DateTime 
+     */
+    public function getLast()
+    {
+        return $this->last;
     }
 }

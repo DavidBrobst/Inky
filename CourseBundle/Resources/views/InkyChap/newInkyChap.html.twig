@@ -3,7 +3,7 @@
 {% block title %}{{ parent() }}{{ lesson.title }}{% endblock %}
 {% block pageTitle %}{{ lesson.title }}{%endblock%}
 {% block rootPath %}
-	<li><a href="{{ path('courses_list')}}" class="divider">{{ 'courses' | trans }}</a></li>
+	<li><a href="{{ path('courses_list' })}}" class="divider">{{ 'courses' | trans }}</a></li>
 	<li><a href="{{ path('course_view', {'course': lesson.course.id}) }}" class="divider">{{ lesson.course.title }}</a></li>
 	<li>{{ lesson.title }}</li>
 	<li>{{ 'couse.inkyChap.new_inky_chap' | trans }}</li>

@@ -12,4 +12,30 @@ use Doctrine\ORM\EntityRepository;
  */
 class ThreadRepository extends EntityRepository
 {
+	public function getSomeThreads($topic,$fromMessage=0, $nbMessage=50, $filter = null)
+	{
+		$query = $this	->createQueryBuilder('t')
+						->leftJoin('t.message','m')
+							->addSelect('m')
+						->where('t.topic = :topic')
+							->setParameter('topic',$topic)
+						->orderBy('t.last', 'DESC')
+						->setMaxResults( $nbMessage )
+						->setFirstResult($fromMessage)
+						
+						->getQuery()
+						->getResult();
+		return $query;
+	}
+	public function countThreads($topic)
+	{
+		$query = $this	->createQueryBuilder('t')
+						->select('count(t.id)')
+						->where('t.topic = :topic')
+							->setParameter('topic',$topic)
+						->getQuery()
+						->getSingleScalarResult();
+		return $query;
+	}
+	
 }

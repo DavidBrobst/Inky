@@ -1,0 +1,40 @@
+	{% for thread in threadList %}
+		<tr>
+			<td class="center">
+				{% if thread.isLocked %}
+					<i class="glyphicon glyphicon-lock" data-toggle="tooltip" data-original-title="{{'forum.thread.locked_thread'|trans }}" ></i>
+				{% elseif thread.isAnswered %}
+					<i class="glyphicon glyphicon-success" data-toggle="tooltip" data-original-title="{{'forum.thread.answered_thread'|trans }}" ></i>
+				{% elseif thread.isFlagged %}
+					<i class="glyphicon glyphicon-flag" data-toggle="tooltip" data-original-title="{{'forum.thread.flagged_thread'|trans }}" ></i>
+				{% else %}
+					<i class="glyphicon glyphicon-bullhorn" data-toggle="tooltip" data-original-title="{{'forum.thread.unanswered_thread'|trans }}" ></i>
+				{% endif %}
+				
+				{% if app.user == thread.user %}
+				<a class="btn btn-xs btn-icon-only" data-toggle="tooltip" data-original-title="{{'forum.thread.edit_thread'|trans }}" href="{{path('inky_forum_editThread',{'thread':thread.id})}}">
+					<i class="glyphicon glyphicon-edit" style="vertical-align:bottom;color:orange;"></i>
+				</a>
+				<a class="btn btn-xs btn-icon-only" data-toggle="tooltip" data-original-title="{{'forum.thread.delete_thread'|trans }}" href="{{path('inky_forum_deleteThread',{'thread':thread.id})}}">
+					<i class="glyphicon glyphicon-remove" style="vertical-align:bottom;color:red;"></i>
+				</a>
+				{% endif %}
+			</td>
+			<td>
+				<b><a href="{{ path('inky_forum_thread',{'thread':thread.id} ) }}">{{thread.title}}</a></b> - 
+				<span >{{thread.slugFirstMessage}}...</span>
+			</td>
+			<td class="center">
+				<span class="label label-info count" title="{{thread.replies}} {{'threads.replies_in_thread' |trans}}">{{thread.replies}}</span>
+			</td>
+			<td class="center">
+				<span class="label label-info count" title="{{thread.views}} {{'threads.views_for_thread' | trans}}">{{thread.views}}</span>
+			</td>
+			<td class="center">
+				<span class="label label-info count" title="{{thread.voteFirstMessage}} {{'threads.votes_for_thread' | trans}}">{{thread.voteFirstMessage}}</span>
+			</td>
+			<td class="center">
+				{{thread.last|ago.0}} {{'ago.format.'~thread.last|ago.1|trans}}
+			</td>
+		</tr>
+	{% endfor%}

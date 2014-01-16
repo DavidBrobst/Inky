@@ -1,0 +1,165 @@
+{% extends "InkyCourseBundle::layout_course_content.html.twig" %}
+
+{% block collapsed_sidebar_menu %}
+{% endblock collapsed_sidebar_menu %}
+
+{% block extended_sidebar_menu %}
+<div id="course_title" class="col-md-12 col-sm-12">
+	<a href="{{ path('course_view',{'course':course.id}) }}">
+		<span class="glyphicon glyphicon-log-out"></span>
+	</a>
+	{{course.title}}
+</div>
+<div id="course_actions" class="col-md-12 col-sm-12 ">
+	<a href="">Return to course</a>
+	<a href="">Ask a question</a>
+	<a href="">Test</a>
+</div>
+<div></div>
+<div id="chap_advancement" class="col-md-12 col-sm-12">12/48</div>
+{% endblock extended_sidebar_menu %}
+
+{% block lesson_blocks %}
+<script type="text/javascript"> var courseMapOut = new Array(); </script>
+	{% for lesson in course.lesson %}
+		{% set lessonIndex = loop.index-1 %}			
+		{% if loop.length > 0 %}			
+			<div id="block_{{ loop.index }}" class="lesson_block">
+				<span>{{lesson.title}}</span>
+				<script type="text/javascript"> courseMapOut.push('{{lesson.title}}'); courseMapOut[{{lessonIndex}}]= new Array();  </script>
+
+			</div>
+			<div id="detail_{{ loop.index }}" class="lesson_detail">
+				{% for inkyChap in lesson.inkyChap %}
+					{% if loop.length > 0 %}
+						<a href="{{ path('alt_course_content',{'course':course.id, 'inkychap':inkyChap.id} ) }}" class="{{ loop.index-1 }}" id="{{inkyChap.id}}">{{ loop.index }}. {{inkyChap.title}}</a><br/>
+						<script type="text/javascript">courseMapOut[{{lessonIndex}}].push({{inkyChap.id}}); </script>
+					{% else %}
+						{{ 'course.takeCourse.lesson_under_construction'|trans }}
+					{% endif %}
+				{% endfor %}
+			</div>
+		{% else %}
+			{{ 'course.takeCourse.course_under_construction'|trans }}
+		{% endif %}
+	{% endfor %}
+{% endblock lesson_blocks %}
+			
+{% block more_js %}
+
+<script type="text/javascript">
+
+
+var $lesson_block = $( "div.lesson_block" );
+var zindex = parseInt($lesson_block.css("z-index"));
+var zindexDif = 6;
+$lesson_block.mouseover(function() {
+	$(this).css("z-index", zindex-zindexDif);
+	detail_block_id = $(this).attr('id').replace('block', 'detail');
+	$detail_block = $('#'+detail_block_id);
+	$detail_block.mouseleave(function() {$lesson_block.css("z-index", zindex+zindexDif);});
+	});
+$lesson_block.click(function() {$(this).css("z-index", zindex-zindexDif);});
+
+function removeInkyChap(){
+	$inkyContent = $('#inky-content'); $bgFilter = $('#bg-filter');
+	$inkyContent.hide();
+	$bgFilter.hide();
+	History.back();
+};
+$('a#backToLessons').click(function(e){ removeInkyChap();e.preventDefault(); });
+
+function displayInkyChap(inkyChapId){
+	$inkyContent = $('#inky-content'); $bgFilter = $('#bg-filter');
+	$inkyContent.show();
+	$bgFilter.show();
+	
+	// Inky Content resizing
+	var $contentCenter = $('div#content-center');
+	$contentCenter.height($(window).height() - 130);$(window).resize(function() {$contentCenter.height($(window).height() - 50);});
+	$contentCenter.empty();
+	var $loader = '<div id="loader"><img alt="loading" id="loadingImg" src="../../../ajax-loader.gif"/></div>';
+	$contentCenter.append($loader);
+	$.ajax({
+                type: 'POST',
+                data: {'inkyChap' : inkyChapId},
+				{% if inkyChap is defined %}
+					url:  '{{ path("course_acess_chap_content", {inkychap: inkyChap.id}) }}',
+				{% else %}
+					url:  '{{ path("inkychap_mock")}}'+inkyChapId,
+				{% endif %}
+                success: function(response) {
+                  $contentCenter.append(response);
+				  $('#loader').hide();
+				  
+               },
+			  error: function (xhr, ajaxOptions, thrownError) {
+				$contentCenter.append(thrownError);
+				$('#loader').hide();
+			  }
+            });
+};
+
+
+
+	
+//<![CDATA[ 
+$(function(){
+	var History = window.History;
+	if (History.enabled) {
+		State = History.getState();
+		// set initial state to first page 'course content'
+		History.pushState({urlPath: '{{ path("course_content", {course: course.id}) }}', inkyContent:''}, '{{course.title}}', State.urlPath);
+		
+	} else {return false;}
+
+
+	// navigation link handler
+	$('div#extended-side-bar, div#collapsed-side-bar, div.lesson_detail').on('click', 'a', function(e) {
+		var urlPath = $(this).attr('href');
+		var title = $(this).text();
+		// We have the chapter id, all that is left to do is load it
+		History.pushState({urlPath: urlPath, inkyContent:$(this).attr('id')}, title, urlPath);
+		
+		displayInkyChap($(this).attr('id'));
+		e.preventDefault();
+		});
+		
+
+});//]]>  
+function nextChap(inkyLesson, inkyChap, courseMapOut) {
+	var nextInkyChap = parseInt(inkyChap) + 1;
+	if(typeof courseMapOut[inkyLesson] != 'undefined'){
+		if(typeof courseMapOut[inkyLesson][nextInkyChap] != 'undefined'){
+			return courseMapOut[inkyLesson][nextInkyChap];
+		}
+		else { return false}
+	}
+	else { return false}
+}
+	
+	$('div.lesson_detail').on('click', 'a', function(e) {
+		var lesson_key = parseInt($(this).parent().attr('id').replace('detail_',''))-1;
+		var inkyChapId = parseInt($(this).attr('class'));
+
+		if(nextChap(lesson_key, inkyChapId, courseMapOut)) {
+			var nextChapter = nextChap(lesson_key,inkyChapId, courseMapOut);
+		}
+		else if(nextChap((lesson_key + 1), -1, courseMapOut)) {
+			var nextChapter = nextChap((lesson_key + 1), -1, courseMapOut);
+		}
+		else{var nextChapter = false;}
+		// Here we will update the chapter advancement AND generate a "NextChap' link ;-)
+		alert (nextChapter);
+	});
+History.Adapter.bind(window,'statechange',function(){
+        var State = History.getState();
+        History.log(State.data, State.title, State.url);
+    });
+
+{% if inkyChap is defined %}
+	displayInkyChap({{inkyChap.id}});
+{% endif%}
+
+</script>
+{% endblock more_js %}

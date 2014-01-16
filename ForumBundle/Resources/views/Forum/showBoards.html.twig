@@ -4,9 +4,63 @@
 {% block title %}{{ parent() }} {{page_name}}{% endblock %}
 {% block pageTitle %}{{page_name}}{%endblock%}
 {% block rootPath %}
-	<li><a href="{{ path('user_profile',{user : app.user.id})}}" class="divider">{{app.user.username}}</a></li>
+	<li><a href="{{ path('inky_forum_boards')}}" class="divider">{{'forum.topic.board'|trans}}</a></li>
 	<li>{{page_name}}</li>
 {% endblock %}
+
+
+
+
+
 {% block inky_body %}
-	Here you have a list of assignment given to you by the guy in charge of a course you have taken
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th class="center" style="width:32px;">
+					&nbsp;
+				</th>
+				<th class="left">
+					Board
+				</th>
+				<th class="center" style="width:60px;">
+					Topics
+				</th>
+				<th class="center" style="width:60px;">
+					Posts
+				</th>
+				<th class="center" style="width:170px;">
+					Last 
+				</th>
+			</tr>
+		</thead>
+	{% for board in boardList %}
+		<tr>
+			<td class="center">
+			{% if is_granted('ROLE_ADMIN') %}
+			<a class="btn btn-xs btn-icon-only" data-toggle="tooltip" data-original-title="{{'forum.board.edit_board'|trans }}" href="{{path('inky_forum_editBoard',{'board':board.id})}}">
+				<i class="glyphicon glyphicon-edit" style="vertical-align:bottom;color:orange;"></i>
+			</a>
+			{% elseif is_granted('ROLE_SUPER_ADMIN') %}
+			<a class="btn btn-xs btn-icon-only" data-toggle="tooltip" data-original-title="{{'forum.board.delete_board'|trans }}" href="{{path('inky_forum_editBoard',{'board':board.id})}}">
+				<i class="glyphicon glyphicon-remove" style="vertical-align:bottom;color:red;"></i>
+			</a>
+			{% endif %}
+			</td>
+			<td>
+				<h4><a href="{{ path('inky_forum_topics',{'board':board.id} ) }}">{{board.title}}</a></h4>
+				<blockquote class="slim">{{board.description}}</blockquote>
+			</td>
+			<td class="center">
+				<span class="label label-info count" title="{{board.cachedTopicNb}} {{'boards.topics_in_board' |trans}}">{{board.cachedTopicNb}}</span>
+			</td>
+			<td class="center">
+				<span class="label label-info count" title="{{board.cachedPostNb}} {{'boards.posts_in_board' | trans}}">{{board.cachedPostNb}}</span>
+			</td>
+			<td class="center">
+
+				Last
+			</td>
+		</tr>
+	{% endfor%}
+	</table>
 {% endblock inky_body %}

@@ -1,0 +1,84 @@
+{% extends "InkyForumBundle::layout.html.twig" %}
+
+{% set page_name = 'forum.message.view_message'|trans %}
+{% block title %}{{ parent() }} {{page_name}}{% endblock %}
+{% block pageTitle %}{{page_name}}{%endblock%}
+{% block rootPath %}
+	<li><a href="{{ path('inky_forum_boards')}}" class="divider">{{'forum.root.boards'|trans}}</a></li>
+	<li><a href="{{ path('inky_forum_topics',{'board':message.thread.topic.board.id})}}" class="divider">{{message.thread.topic.board.title}}</a></li>
+	<li><a href="{{ path('inky_forum_threads',{'topic':message.thread.topic.id})}}" class="divider">{{message.thread.topic.title}}</a></li>
+	<li><a href="{{ path('inky_forum_thread',{'thread':message.thread.id})}}" class="divider">{{message.thread.title}}</a></li>
+	<li>{{page_name}}</li>
+{% endblock %}
+
+
+
+
+{% block inky_body %}
+	{% if message.isFirstMessage %}
+		{% set panel_class = 'primary' %}
+		{% if message.user.id == app.user.id %}
+			{% set add_link = '
+			<a 	class="btn btn-xs btn-icon-only" 
+				data-toggle="tooltip"
+				data-original-title="' ~ 'forum.showMessage.edit_thread'|trans ~ '"
+				href="' ~ path('inky_forum_editThread',{'thread':message.thread.id})  ~ '">
+				<i class="glyphicon glyphicon-edit message_shortcut"></i>
+			</a>
+			<a 	class="btn btn-xs btn-icon-only" 
+				data-toggle="tooltip"
+				data-original-title="' ~ 'forum.showMessage.delete_thread'|trans ~ '"
+				href="' ~ path('inky_forum_deleteThread',{'thread':message.thread.id})  ~ '">
+				<i class="glyphicon glyphicon-remove message_shortcut"></i>
+			</a>
+			
+			' %}
+		{% endif %}
+	{% else %}
+		{% set panel_class = 'default' %}
+		{% if message.user.id == app.user.id %}
+			{% set add_link = '
+			<a class="btn btn-xs btn-icon-only" 
+				data-toggle="tooltip"
+				data-original-title="' ~ 'forum.showMessage.edit_message'|trans ~ '"
+				href="' ~ path('inky_forum_editMessage',{'message':message.id})  ~ '">
+				<i class="glyphicon glyphicon-edit message_shortcut"></i>
+			</a>
+			<a class="btn btn-xs btn-icon-only" 
+				data-toggle="tooltip"
+				data-original-title="' ~ 'forum.showMessage.delete_message'|trans ~ '"
+				href="' ~ path('inky_forum_deleteMessage',{'message':message.id})  ~ '">
+				<i class="glyphicon glyphicon-remove message_shortcut"></i>
+			</a>
+			
+			' %}
+		{% endif %}
+	{% endif %}
+	<div class="row panel panel-primary {{panel_class}} message">
+		<header class="panel-heading">
+			<div class="row clearfix">
+				<div class="col-md-7 pull-left">
+					<h3 class="panel-title">
+						{{message.user.username}} <span class="timestamper" >{{message.dateCreated|ago.0}} {{'ago.format.'~message.dateCreated|ago.1|trans}}</span>
+					</h3>
+				</div>
+				<div class="col-md-4 pull-right text-right">
+					<div class="btn-group">
+						<a class="btn btn-xs btn-icon-only" title="{{'forum.message.back_to_thread'|trans}}" href="{{ path('inky_forum_thread',{'thread':message.thread.id}) }}">
+							<i class="glyphicon glyphicon-circle-arrow-left message_shortcut"></i>
+						</a>
+						{% if add_link is defined %}
+							{{add_link|raw}}
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</header>
+		<div class="panel-body">
+			{{ message.content | raw }}
+		</div>
+	</div>
+
+<hr>
+Here put comment
+{% endblock inky_body %}
