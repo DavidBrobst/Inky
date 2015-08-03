@@ -1,14 +1,20 @@
 Inky
 ====
 
-Develloped using the symfony framework, Inky is an educational platform with these features:
+Develloped using the symfony2 framework, Inky is an educational platform that features:
+============
+- Classroom (study group) creation and privacy
+- Forums linked and embeded into lessons
+- Different kind of customizabe exercises
+- Detailed stats on test results
 
-- Designed to help you get new lifetime skills or learn about helpfull tricks
-- No tests, course completion alone should be proof of your effort and newly acquired skill(s)
-- Easilly sharable courses (ebook, pdf, embeded code...)
-- Help teachers/course creators make side income through the elaboration of courses
-- Proudy non-profit
+InkyLab is :
+============
+- Designed to help you get new lifetime lessons
+- Ready to create easilly sharable courses (ebook, pdf, embeded code...)
+- Convinced that no tests and course completion alone should be proof skill(s) acquisition
+- Proudly non-profit
 
 Installation
 ============
-To install Inky on your machine, open a new symfony project, import dependencies via the .json file and you'll be able to run the three bundles Course, Quiz and User
+To install Inky, as usual, open a new symfony project and import dependencies via the .json file. You'll be able to run the three bundles Course, Quiz and User on your machine.
