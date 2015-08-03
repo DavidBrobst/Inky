@@ -1,12 +1,6 @@
 Inky
 ====
 
-Develloped using the symfony2 framework, Inky is an educational platform that features:
-============
-- Classroom (study group) creation and privacy
-- Forums linked and embeded into lessons
-- Different kind of customizabe exercises
-- Detailed stats on test results
 
 InkyLab is :
 ============
@@ -14,6 +8,15 @@ InkyLab is :
 - Ready to create easilly sharable courses (ebook, pdf, embeded code...)
 - Convinced that no tests and course completion alone should be proof skill(s) acquisition
 - Proudly non-profit
+
+
+Develloped using the symfony2 framework, Inky is an educational platform that features:
+============
+- Classroom (study group) creation and privacy
+- Forums linked and embeded into lessons
+- Different kind of customizabe exercises
+- Detailed stats on test results
+
 
 Installation
 ============
